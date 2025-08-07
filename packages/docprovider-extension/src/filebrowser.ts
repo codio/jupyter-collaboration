@@ -62,7 +62,7 @@ export const rtcContentProvider: JupyterFrontEndPlugin<ICollaborativeContentProv
       globalAwareness: Awareness | null,
       settingRegistry: ISettingRegistry | null
     ): Promise<ICollaborativeContentProvider> => {
-      const trans = translator.load('jupyter_collaboration');
+      const trans = translator.load('codio_jupyter_collaboration');
       const defaultDrive = (app.serviceManager.contents as ContentsManager)
         .defaultDrive;
       if (!defaultDrive) {
@@ -289,7 +289,7 @@ export const logger: JupyterFrontEndPlugin<void> = {
     nbTracker: INotebookTracker | null,
     translator: ITranslator | null
   ): void => {
-    const trans = (translator ?? nullTranslator).load('jupyter_collaboration');
+    const trans = (translator ?? nullTranslator).load('codio_jupyter_collaboration');
     const schemaID =
       'https://schema.jupyter.org/jupyter_collaboration/session/v1';
 
