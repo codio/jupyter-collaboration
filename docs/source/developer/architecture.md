@@ -5,10 +5,11 @@
 Jupyter Collaboration consists of several Python packages and frontend extensions:
 
 - **jupyter_server_ydoc**:
+  renamed to jupyter_server_ydoc_codio
   A Jupyter Server extension providing core collaborative models. It manages YDocument data structures tied to notebook files and exposes WebSocket endpoints for real-time updates. It integrates CRDTs into Jupyter’s file management and kernel system.
 
 - **jupyter_collaboration**:
-  A meta-package that bundles the backend (`jupyter_server_ydoc`) and frontend (JupyterLab and Notebook 7 UI extensions). It connects the collaborative frontend UX (status badges, shared cursors, etc.) with the backend.
+  A meta-package that bundles the backend (`jupyter_server_ydoc_codio`) and frontend (JupyterLab and Notebook 7 UI extensions). It connects the collaborative frontend UX (status badges, shared cursors, etc.) with the backend.
 
 ### Key dependencies:
 

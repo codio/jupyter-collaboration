@@ -103,7 +103,7 @@ def bump(force, skip_if_dirty, spec):
     # to ensure that users can just upgrade `jupyter-collaboration`
     # and get all fixes for free.
     # Formatting based on https://stackoverflow.com/questions/70721025/tomlkit-nicely-formatted-array-with-inline-tables
-    metapackage = "jupyter-collaboration"
+    metapackage = "jupyter-collaboration-codio"
     metapackage_toml_path = HERE / "projects" / metapackage / "pyproject.toml"
     metapackage_toml = tomlkit.parse(metapackage_toml_path.read_text())
     old_dependencies = metapackage_toml.get("project").get("dependencies")

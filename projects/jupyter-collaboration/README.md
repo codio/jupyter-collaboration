@@ -3,4 +3,4 @@
 A meta-package for:
 - jupyter-collaboration-ui
 - jupyter-docprovider
-- jupyter-server-ydoc
+- jupyter-server-ydoc-codio

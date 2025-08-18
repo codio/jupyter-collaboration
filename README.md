@@ -31,3 +31,30 @@ See [CONTRIBUTING](./docs/source/developer/contributing.rst#running-tests).
 ## Contributing
 
 If you are interested in contributing to the project, see [CONTRIBUTING](./docs/source/developer/contributing.rst).
+
+## Codio
+
+Publish jupyter-server-ydoc-codio manually
+
+```
+pip install twine
+```
+
+```
+cd projects/jupyter-server-ydoc-codio
+```
+
+to build
+```
+python -m build
+```
+
+to upload to test pypi. need to get API key from pypi site.
+```
+twine upload --repository testpypi dist/* --verbose
+```
+
+to install from testpypi
+```
+python -m pip install -i https://test.pypi.org/simple/ jupyter-server-ydoc-codio
+```
