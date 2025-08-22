@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 requires = ["hatchling>=1.4.0"]
 
 [project]
-name = "jupyter-collaboration"
+name = "jupyter-collaboration-codio"
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.8"
@@ -30,8 +30,8 @@ classifiers = [
 ]
 dynamic = ["version"]
 dependencies = [
-    "jupyter_collaboration_ui>=2.1.0,<3",
-    "jupyter_docprovider>=2.1.0,<3",
+    "jupyter_collaboration_ui_codio>=2.1.0,<3",
+    "jupyter_docprovider_codio>=2.1.0,<3",
     "jupyter_server_ydoc_codio>=2.1.0,<3",
     "jupyterlab>=4.4.0,<5.0.0",
 ]
