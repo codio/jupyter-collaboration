@@ -6,8 +6,8 @@ from __future__ import annotations
 import asyncio
 from datetime import datetime, timedelta, timezone
 
-from jupyter_server_ydoc.loaders import FileLoader, FileLoaderMapping
-from jupyter_server_ydoc.test_utils import FakeContentsManager, FakeFileIDManager
+from jupyter_server_ydoc_codio.loaders import FileLoader, FileLoaderMapping
+from jupyter_server_ydoc_codio.test_utils import FakeContentsManager, FakeFileIDManager
 
 
 async def test_FileLoader_with_watcher():

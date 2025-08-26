@@ -23,10 +23,10 @@ For example, to access a read-only view of the shared notebook model in your jup
 API Reference
 -------------
 
-.. automodule:: jupyter_server_ydoc.app
+.. automodule:: jupyter_server_ydoc_codio.app
   :members:
   :inherited-members:
 
-.. automodule:: jupyter_server_ydoc.handlers
+.. automodule:: jupyter_server_ydoc_codio.handlers
   :members:
   :inherited-members:

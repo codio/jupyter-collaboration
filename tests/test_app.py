@@ -5,8 +5,8 @@ from __future__ import annotations
 
 import nbformat
 import pytest
-from jupyter_server_ydoc.pytest_plugin import rtc_create_SQLite_store_factory
-from jupyter_server_ydoc.stores import SQLiteYStore, TempFileYStore
+from jupyter_server_ydoc_codio.pytest_plugin import rtc_create_SQLite_store_factory
+from jupyter_server_ydoc_codio.stores import SQLiteYStore, TempFileYStore
 
 
 def test_default_settings(jp_serverapp):
@@ -56,7 +56,7 @@ def test_settings_should_change_save_delay(jp_configurable_serverapp):
 
 
 def test_settings_should_change_ystore_class(jp_configurable_serverapp):
-    argv = ["--YDocExtension.ystore_class=jupyter_server_ydoc.stores.TempFileYStore"]
+    argv = ["--YDocExtension.ystore_class=jupyter_server_ydoc_codio.stores.TempFileYStore"]
 
     app = jp_configurable_serverapp(argv=argv)
     settings = app.web_app.settings["jupyter_server_ydoc_config"]

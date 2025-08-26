@@ -9,7 +9,7 @@ from typing import Any
 
 from dirty_equals import IsStr
 from jupyter_events.logger import EventLogger
-from jupyter_server_ydoc.test_utils import Websocket
+from jupyter_server_ydoc_codio.test_utils import Websocket
 from jupyter_ydoc import YUnicode
 from pycrdt import Text
 from pycrdt_websocket import WebsocketProvider

@@ -37,7 +37,7 @@ If you are interested in contributing to the project, see [CONTRIBUTING](./docs/
 Publish jupyter-server-ydoc-codio manually
 
 ```
-pip install twine
+pip install twine build
 ```
 
 ```
