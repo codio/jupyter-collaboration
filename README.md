@@ -44,6 +44,8 @@ pip install twine build
 cd projects/jupyter-server-ydoc-codio
 ```
 
+bump version at `projects/jupyter-server-ydoc-codio/jupyter_server_ydoc_codio/_version.py`
+
 to build
 ```
 python -m build
