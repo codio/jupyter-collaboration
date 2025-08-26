@@ -68,7 +68,7 @@ html_theme_options = {
 
 # Output for github to be used in links
 html_context = {
-    "github_user": "jupyterlab",  # Username
+    "github_user": "codio",  # Username
     "github_repo": "jupyter-collaboration",  # Repo name
     "github_version": "main",  # Version
     "doc_path": "docs/source",  # Path from repo root to the docs folder
