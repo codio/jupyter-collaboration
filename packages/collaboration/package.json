@@ -1,6 +1,6 @@
 {
   "name": "@jupyter/collaboration",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "description": "Codio fork of JupyterLab - Real-Time Collaboration Widgets",
   "homepage": "https://github.com/codio/jupyter-collaboration",
   "bugs": {
