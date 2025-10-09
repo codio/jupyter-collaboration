@@ -42,7 +42,7 @@ const onLoadCodioClient = function () {
 
 export const loadCodioClient = async (codioClientUrl?: string) => {
   if (!codioClientUrl) {
-    codioClientUrl = 'https://codio.test/ext/iframe/base/static/codio-client.js';
+    codioClientUrl = 'https://codio.com/ext/iframe/base/static/codio-client.js';
   }
   loadJS(codioClientUrl, onLoadCodioClient, document.body);
   await codioClientLoadDeferred.promise
