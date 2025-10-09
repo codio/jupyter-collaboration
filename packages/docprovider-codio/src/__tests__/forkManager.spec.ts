@@ -19,7 +19,7 @@ const eventManagerMock = {
   stream: stream as any
 } as Event.IManager;
 
-describe('@jupyter/docprovider', () => {
+describe('docprovider-codio', () => {
   let manager: ForkManager;
   beforeEach(() => {
     manager = new ForkManager({

@@ -15,7 +15,7 @@ import {
   IEditorExtensionRegistry
 } from '@jupyterlab/codemirror';
 import { IGlobalAwareness } from '@jupyter/collaborative-drive';
-import { WebSocketAwarenessProvider } from '@jupyter/docprovider';
+import { WebSocketAwarenessProvider } from 'docprovider-codio';
 import { SidePanel, usersIcon } from '@jupyterlab/ui-components';
 import { URLExt } from '@jupyterlab/coreutils';
 import { ServerConnection } from '@jupyterlab/services';

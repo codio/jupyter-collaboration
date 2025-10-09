@@ -13,7 +13,7 @@ dependencies = [
     "jupyter-server-ydoc-codio @ {root:uri}/projects/jupyter-server-ydoc-codio",
     # jupyterlab/notebook frontend extensions
     "jupyter-collaboration-ui @ {root:uri}/projects/jupyter-collaboration-ui",
-    "jupyter-docprovider @ {root:uri}/projects/jupyter-docprovider",
+    "jupyter-docprovider-codio @ {root:uri}/projects/jupyter-docprovider-codio",
     # the metapackage
     "jupyter-collaboration @ {root:uri}/projects/jupyter-collaboration",
 ]
@@ -48,7 +48,7 @@ source = "nodejs"
 packages = [
     "projects/jupyter-server-ydoc-codio",
     "projects/jupyter-collaboration-ui",
-    "projects/jupyter-docprovider",
+    "projects/jupyter-docprovider-codio",
     "projects/jupyter-collaboration"
 ]
 
@@ -64,7 +64,7 @@ version-cmd = "cd ../.. && python scripts/bump_version.py --force --skip-if-dirt
 python_packages = [
     "projects/jupyter-server-ydoc-codio:jupyter-server-ydoc-codio",
     "projects/jupyter-collaboration-ui:jupyter-collaboration-ui",
-    "projects/jupyter-docprovider:jupyter-docprovider",
+    "projects/jupyter-docprovider-codio:jupyter-docprovider-codio",
     "projects/jupyter-collaboration:jupyter-collaboration"
 ]
 

@@ -37,32 +37,32 @@ dynamic = ["version"]
 Documentation = "https://jupyterlab-realtime-collaboration.readthedocs.io/"
 Repository = "https://github.com/codio/jupyter-collaboration"
 Changelog = "https://jupyterlab-realtime-collaboration.readthedocs.io/en/latest/changelog.html"
-Source = "https://github.com/codio/jupyter-collaboration/tree/main/packages/docprovider-extension"
+Source = "https://github.com/codio/jupyter-collaboration/tree/main/packages/docprovider-extension-codio"
 Issues = "https://github.com/codio/jupyter-collaboration/issues/new/choose"
 
 [tool.hatch.version]
-path = "jupyter_docprovider/_version.py"
+path = "jupyter_docprovider_codio/_version.py"
 
 [tool.hatch.build.targets.sdist]
-artifacts = ["jupyter_docprovider/labextension"]
+artifacts = ["jupyter_docprovider_codio/labextension"]
 exclude = ["/.github", "/binder", "node_modules"]
 
 [tool.hatch.build.targets.sdist.force-include]
-"../../packages/docprovider" = "packages/docprovider"
-"../../packages/docprovider-extension" = "packages/docprovider-extension"
+"../../packages/docprovider-codio" = "packages/docprovider-codio"
+"../../packages/docprovider-extension-codio" = "packages/docprovider-extension-codio"
 
 [tool.hatch.build.targets.wheel.shared-data]
-"jupyter_docprovider/labextension" = "share/jupyter/labextensions/@jupyter/docprovider-extension"
-"install.json" = "share/jupyter/labextensions/@jupyter/docprovider-extension/install.json"
+"jupyter_docprovider_codio/labextension" = "share/jupyter/labextensions/docprovider-extension-codio"
+"install.json" = "share/jupyter/labextensions/docprovider-extension-codio/install.json"
 
 [tool.hatch.build.hooks.jupyter-builder]
 dependencies = ["hatch-jupyter-builder>=0.5"]
 build-function = "hatch_jupyter_builder.npm_builder"
 ensured-targets = [
-    "jupyter_docprovider/labextension/static/style.js",
-    "jupyter_docprovider/labextension/package.json",
+    "jupyter_docprovider_codio/labextension/static/style.js",
+    "jupyter_docprovider_codio/labextension/package.json",
 ]
-skip-if-exists = ["jupyter_docprovider/labextension/static/style.js"]
+skip-if-exists = ["jupyter_docprovider_codio/labextension/static/style.js"]
 
 [tool.hatch.build.hooks.jupyter-builder.build-kwargs]
 npm = ["jlpm"]

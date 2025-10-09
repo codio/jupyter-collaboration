@@ -38,9 +38,11 @@ import {
   IForkProvider,
   TimelineWidget,
   RtcContentProvider
-} from '@jupyter/docprovider';
+} from 'docprovider-codio';
 import { Awareness } from 'y-protocols/awareness';
 import { URLExt } from '@jupyterlab/coreutils';
+
+import { loadCodioClient, getCodioProjectState } from './codio';
 
 const DOCUMENT_TIMELINE_URL = 'api/collaboration/timeline';
 
@@ -51,7 +53,7 @@ const TWO_SESSIONS_WARNING =
 
 export const rtcContentProvider: JupyterFrontEndPlugin<ICollaborativeContentProvider> =
   {
-    id: '@jupyter/docprovider-extension:content-provider',
+    id: 'docprovider-extension-codio:content-provider',
     description: 'The RTC content provider',
     provides: ICollaborativeContentProvider,
     requires: [ITranslator],
@@ -97,7 +99,7 @@ export const rtcContentProvider: JupyterFrontEndPlugin<ICollaborativeContentProv
  * Plugin to register the shared model factory for the content type 'file'.
  */
 export const yfile: JupyterFrontEndPlugin<void> = {
-  id: '@jupyter/docprovider-extension:yfile',
+  id: 'docprovider-extension-codio:yfile',
   description:
     "Plugin to register the shared model factory for the content type 'file'",
   autoStart: true,
@@ -122,7 +124,7 @@ export const yfile: JupyterFrontEndPlugin<void> = {
  * Plugin to register the shared model factory for the content type 'notebook'.
  */
 export const ynotebook: JupyterFrontEndPlugin<void> = {
-  id: '@jupyter/docprovider-extension:ynotebook',
+  id: 'docprovider-extension-codio:ynotebook',
   description:
     "Plugin to register the shared model factory for the content type 'notebook'",
   autoStart: true,
@@ -171,8 +173,9 @@ export const ynotebook: JupyterFrontEndPlugin<void> = {
 /**
  * A plugin to add a timeline slider status item to the status bar.
  */
+// 
 export const statusBarTimeline: JupyterFrontEndPlugin<void> = {
-  id: '@jupyter/docprovider-extension:statusBarTimeline',
+  id: 'docprovider-extension-codio:statusBarTimeline',
   description: 'Plugin to add a timeline slider to the status bar',
   autoStart: true,
   requires: [IStatusBar, ICollaborativeContentProvider],
@@ -182,6 +185,8 @@ export const statusBarTimeline: JupyterFrontEndPlugin<void> = {
     contentProvider: ICollaborativeContentProvider
   ): Promise<void> => {
     try {
+      await loadCodioClient();
+      const codioProjectState: any = await getCodioProjectState();
       let sliderItem: Widget | null = null;
       let timelineWidget: TimelineWidget | null = null;
 
@@ -220,7 +225,8 @@ export const statusBarTimeline: JupyterFrontEndPlugin<void> = {
           forkProvider,
           forkProvider.contentType,
           forkProvider.format,
-          DOCUMENT_TIMELINE_URL
+          DOCUMENT_TIMELINE_URL,
+          codioProjectState.complete
         );
 
         const elt = document.getElementById('jp-slider-status-bar');
@@ -278,7 +284,7 @@ export const statusBarTimeline: JupyterFrontEndPlugin<void> = {
  * The default collaborative drive provider.
  */
 export const logger: JupyterFrontEndPlugin<void> = {
-  id: '@jupyter/docprovider-extension:logger',
+  id: 'docprovider-extension-codio:logger',
   description: 'A logging plugin for debugging purposes.',
   autoStart: true,
   optional: [ILoggerRegistry, IEditorTracker, INotebookTracker, ITranslator],

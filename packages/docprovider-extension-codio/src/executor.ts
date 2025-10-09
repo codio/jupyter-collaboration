@@ -2,10 +2,10 @@
 // Distributed under the terms of the Modified BSD License.
 /**
  * @packageDocumentation
- * @module docprovider-extension
+ * @module docprovider-extension-codio
  */
 
-import { NotebookCellServerExecutor } from '@jupyter/docprovider';
+import { NotebookCellServerExecutor } from 'docprovider-codio';
 import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin
@@ -15,7 +15,7 @@ import { INotebookCellExecutor, runCell } from '@jupyterlab/notebook';
 
 export const notebookCellExecutor: JupyterFrontEndPlugin<INotebookCellExecutor> =
   {
-    id: '@jupyter/docprovider-extension:notebook-cell-executor',
+    id: 'docprovider-extension-codio:notebook-cell-executor',
     description:
       'Add notebook cell executor that uses REST API instead of kernel protocol over WebSocket.',
     autoStart: true,

@@ -33,3 +33,10 @@
   width: 100%;
   background: var(--jp-accept-color-normal)
 }
+
+.jp-ToolbarButtonComponent.jp-closeBtn {
+  cursor: pointer;
+  color: var(--jp-layout-color2);
+  width: 100%;
+  background: var(--jp-accept-color-normal)
+}

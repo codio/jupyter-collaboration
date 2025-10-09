@@ -4,7 +4,7 @@
 |----------------------------------------------------------------------------*/
 /**
  * @packageDocumentation
- * @module docprovider
+ * @module docprovider-codio
  */
 
 export * from './awareness';

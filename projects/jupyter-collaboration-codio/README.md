@@ -2,5 +2,5 @@
 
 A meta-package for:
 - jupyter-collaboration-ui
-- jupyter-docprovider
+- jupyter-docprovider-codio
 - jupyter-server-ydoc-codio

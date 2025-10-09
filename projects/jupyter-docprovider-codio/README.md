@@ -1,5 +1,7 @@
-# jupyter-docprovider
+# jupyter-docprovider-codio
+# fork of jupyter-docprovider
 
+Codio fork of
 JupyterLab/Jupyter Notebook 7+ extension integrating collaborative shared models.
 
 The collaborative shared models are used for both:

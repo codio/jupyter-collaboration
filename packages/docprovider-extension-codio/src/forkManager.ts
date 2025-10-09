@@ -8,7 +8,7 @@ import {
   ForkManager,
   IForkManager,
   IForkManagerToken
-} from '@jupyter/docprovider';
+} from 'docprovider-codio';
 
 import {
   JupyterFrontEnd,
@@ -16,7 +16,7 @@ import {
 } from '@jupyterlab/application';
 
 export const forkManagerPlugin: JupyterFrontEndPlugin<IForkManager> = {
-  id: '@jupyter/docprovider-extension:forkManager',
+  id: 'docprovider-extension-codio:forkManager',
   autoStart: true,
   requires: [ICollaborativeContentProvider],
   provides: IForkManagerToken,

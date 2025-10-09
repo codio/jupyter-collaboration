@@ -113,5 +113,5 @@ export interface IForkManager extends IDisposable {
  * Token providing a fork manager instance.
  */
 export const IForkManagerToken = new Token<IForkManager>(
-  '@jupyter/docprovider:IForkManagerToken'
+  'docprovider-codio:IForkManagerToken'
 );

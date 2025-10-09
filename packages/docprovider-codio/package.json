@@ -1,5 +1,5 @@
 {
-  "name": "@jupyter/docprovider",
+  "name": "docprovider-codio",
   "version": "4.1.1",
   "description": "Codio fork of JupyterLab - Document Provider",
   "homepage": "https://github.com/codio/jupyter-collaboration",
@@ -67,7 +67,7 @@
   "private": true,
   "typedoc": {
     "entryPoint": "./src/index.ts",
-    "displayName": "@jupyter/docprovider",
+    "displayName": "docprovider-codio",
     "tsconfig": "./tsconfig.json"
   },
   "jupyterlab": {

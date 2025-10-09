@@ -20,6 +20,7 @@ type Props = {
   contentType: string;
   format: string;
   documentTimelineUrl: string;
+  projectIsComplete: boolean;
 };
 
 export const TimelineSliderComponent: React.FC<Props> = ({
@@ -27,7 +28,8 @@ export const TimelineSliderComponent: React.FC<Props> = ({
   provider,
   contentType,
   format,
-  documentTimelineUrl
+  documentTimelineUrl,
+  projectIsComplete
 }) => {
   const [data, setData] = useState({
     roomId: '',
@@ -92,6 +94,50 @@ export const TimelineSliderComponent: React.FC<Props> = ({
     }
   }
 
+  const handleClose = async () => {
+    if (!sessionRef.current) {
+      console.error('Session is not initialized');
+      return;
+    }
+
+    const currentTimestamp = data.timestamps.length - 1;
+    const steps = Math.abs(currentTimestamp - currentTimestampIndex);
+    try {
+      const action = determineAction(currentTimestamp);
+      setCurrentTimestampIndex(currentTimestamp);
+
+      if (isFirstSliderChange.current) {
+        setIsBtn(true);
+        isFirstSliderChange.current = false;
+      }
+
+      await requestUndoRedo(
+        `${sessionRef.current.format}:${sessionRef.current.type}:${sessionRef.current.fileId}`,
+        action,
+        steps,
+        data.forkRoom
+      );
+    } catch (error: any) {
+      console.error('Error fetching or applying updates:', error);
+    }
+
+    const response = await requestUndoRedo(
+      `${sessionRef.current.format}:${sessionRef.current.type}:${sessionRef.current.fileId}`,
+      'restore',
+      0,
+      data.forkRoom
+    );
+
+    if (response.code === 200) {
+      Notification.success(response.status, { autoClose: 4000 });
+      provider.reconnect();
+      setToggle(false);
+      isFirstChange.current = true;
+    } else {
+      Notification.error(response.status, { autoClose: 4000 });
+    }
+  }
+
   const handleRestore = async () => {
     if (!sessionRef.current) {
       console.error('Session is not initialized');
@@ -148,6 +194,7 @@ export const TimelineSliderComponent: React.FC<Props> = ({
   function determineAction(currentTimestamp: number): 'undo' | 'redo' {
     return currentTimestamp < currentTimestampIndex ? 'undo' : 'redo';
   }
+
   function extractFilenameFromURL(url: string): string {
     try {
       const parsedURL = new URL(url);
@@ -186,7 +233,7 @@ export const TimelineSliderComponent: React.FC<Props> = ({
           fetchTimeline(extractFilenameFromURL(apiURL));
         }}
         className="jp-mod-highlighted"
-        title="Document Timeline"
+        title="Document Timeline Codio"
       >
         <historyIcon.react marginRight="4px" />
       </div>
@@ -203,7 +250,7 @@ export const TimelineSliderComponent: React.FC<Props> = ({
           <div>
             <strong>{extractFilenameFromURL(apiURL).split('/').pop()} </strong>{' '}
           </div>
-          {isBtn && (
+          {isBtn && !projectIsComplete && (
             <div className="jp-restoreBtnContainer">
               <button
                 onClick={handleRestore}
@@ -214,6 +261,14 @@ export const TimelineSliderComponent: React.FC<Props> = ({
               </button>
             </div>
           )}
+          <div className="jp-closeBtnContainer">
+            <button
+              onClick={handleClose}
+              className="jp-ToolbarButtonComponent jp-closeBtn"
+            >
+              Close
+            </button>
+          </div>
         </div>
       )}
     </div>
