@@ -19,7 +19,6 @@ export const deferred = () => {
   return { resolve, reject, promise };
 };
 
-// TODO: check if window.codio is already loaded
 export const codioClientLoadDeferred = deferred();
 const loadJS = (url: string, onLoad: any, location: any) => {
   //url is URL of external file, onLoad is the code
@@ -46,6 +45,11 @@ const onLoadCodioClient = function () {
 };
 
 export const loadCodioClient = async (codioClientUrl?: string) => {
+  // do not double load
+  if (window.codio) {
+    codioClientLoadDeferred.resolve();
+    return
+  }
   if (!codioClientUrl) {
     codioClientUrl = 'https://codio.com/ext/iframe/base/static/codio-client.js';
   }

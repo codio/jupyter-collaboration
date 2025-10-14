@@ -16,7 +16,6 @@ class SQLiteYStoreMetaclass(type(LoggingConfigurable), type(_SQLiteYStore)):  # 
 
 
 class SQLiteYStore(LoggingConfigurable, _SQLiteYStore, metaclass=SQLiteYStoreMetaclass):
-    # change the default state?
     db_path = Unicode(
         ".jupyter_ystore.db",
         config=True,
