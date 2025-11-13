@@ -81,7 +81,7 @@ export const getCodioProjectState = async () => {
     })
     setTimeout(() => {
       resolve({})
-    }, 30 * 1000)
+    }, 10 * 1000)
   })
 
   window.codio?.setLoaded()

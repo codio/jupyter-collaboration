@@ -45,7 +45,7 @@
     "build:labextension:dev": "jupyter labextension build --development True .",
     "clean": "jlpm run clean:lib",
     "clean:lib": "rimraf lib tsconfig.tsbuildinfo node_modules",
-    "clean:labextension": "rimraf ../../projects/jupyter-collaboration-ui/jupyter_collaboration_ui/labextension",
+    "clean:labextension": "rimraf ../../projects/jupyter-collaboration-ui-codio/jupyter_collaboration_ui_codio/labextension",
     "clean:all": "jlpm run clean:lib && jlpm run clean:labextension",
     "install:extension": "jlpm run build",
     "watch": "run-p watch:src watch:labextension",
@@ -87,7 +87,7 @@
   "jupyterlab": {
     "extension": true,
     "schemaDir": "./schema",
-    "outputDir": "../../projects/jupyter-collaboration-ui/jupyter_collaboration_ui/labextension",
+    "outputDir": "../../projects/jupyter-collaboration-ui-codio/jupyter_collaboration_ui_codio/labextension",
     "sharedPackages": {
       "@codemirror/state": {
         "bundled": false,

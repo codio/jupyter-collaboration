@@ -10,6 +10,7 @@ import {
 import { Dialog, showDialog } from '@jupyterlab/apputils';
 import { DocumentWidget, IDocumentWidget } from '@jupyterlab/docregistry';
 import { Widget } from '@lumino/widgets';
+import { IDocumentManager } from '@jupyterlab/docmanager';
 
 import { IStatusBar } from '@jupyterlab/statusbar';
 import { ContentsManager } from '@jupyterlab/services';
@@ -178,14 +179,15 @@ export const statusBarTimeline: JupyterFrontEndPlugin<void> = {
   id: 'docprovider-extension-codio:statusBarTimeline',
   description: 'Plugin to add a timeline slider to the status bar',
   autoStart: true,
-  requires: [IStatusBar, ICollaborativeContentProvider],
+  requires: [IStatusBar, ICollaborativeContentProvider, IDocumentManager],
   activate: async (
     app: JupyterFrontEnd,
     statusBar: IStatusBar,
-    contentProvider: ICollaborativeContentProvider
+    contentProvider: ICollaborativeContentProvider,
+    docManager: IDocumentManager
   ): Promise<void> => {
     try {
-      await loadCodioClient();
+      await loadCodioClient("https://test2-codio.com/ext/iframe/base/static/codio-client.js");
       const codioProjectState: any = await getCodioProjectState();
       let sliderItem: Widget | null = null;
       let timelineWidget: TimelineWidget | null = null;
@@ -220,13 +222,23 @@ export const statusBarTimeline: JupyterFrontEndPlugin<void> = {
           documentPath
         );
 
+        let docIsReadonly = false;
+        const shellWidget = app.shell.currentWidget;
+        if (shellWidget) {
+          const docContext = docManager.contextForWidget(shellWidget);
+          if (docContext) {
+            docIsReadonly = docContext.contentsModel?.writable !== true;
+          }
+        }
+
         timelineWidget = new TimelineWidget(
           fullPath,
           forkProvider,
           forkProvider.contentType,
           forkProvider.format,
           DOCUMENT_TIMELINE_URL,
-          codioProjectState && codioProjectState.complete
+          codioProjectState && codioProjectState.complete,
+          docIsReadonly
         );
 
         const elt = document.getElementById('jp-slider-status-bar');

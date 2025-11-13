@@ -15,6 +15,7 @@ export class TimelineWidget extends ReactWidget {
   private format: string;
   private documentTimelineUrl: string;
   private projectIsComplete: boolean;
+  private docIsReadonly: boolean;
 
   constructor(
     apiURL: string,
@@ -22,7 +23,8 @@ export class TimelineWidget extends ReactWidget {
     contentType: string,
     format: string,
     documentTimelineUrl: string,
-    projectIsComplete: boolean
+    projectIsComplete: boolean,
+    docIsReadonly: boolean
   ) {
     super();
     this.apiURL = apiURL;
@@ -31,6 +33,7 @@ export class TimelineWidget extends ReactWidget {
     this.format = format;
     this.documentTimelineUrl = documentTimelineUrl;
     this.projectIsComplete = projectIsComplete;
+    this.docIsReadonly = docIsReadonly;
     this.addClass('jp-timelineSliderWrapper');
   }
 
@@ -44,6 +47,7 @@ export class TimelineWidget extends ReactWidget {
         format={this.format}
         documentTimelineUrl={this.documentTimelineUrl}
         projectIsComplete={this.projectIsComplete}
+        docIsReadonly={this.docIsReadonly}
       />
     );
   }

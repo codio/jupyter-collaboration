@@ -3,7 +3,7 @@
 | Distributed under the terms of the Modified BSD License.
 |----------------------------------------------------------------------------*/
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import '../style/slider.css';
 import {
   requestUndoRedo,
@@ -21,6 +21,7 @@ type Props = {
   format: string;
   documentTimelineUrl: string;
   projectIsComplete: boolean;
+  docIsReadonly: boolean;
 };
 
 export const TimelineSliderComponent: React.FC<Props> = ({
@@ -29,7 +30,8 @@ export const TimelineSliderComponent: React.FC<Props> = ({
   contentType,
   format,
   documentTimelineUrl,
-  projectIsComplete
+  projectIsComplete,
+  docIsReadonly
 }) => {
   const [data, setData] = useState({
     roomId: '',
@@ -46,6 +48,37 @@ export const TimelineSliderComponent: React.FC<Props> = ({
   const isFirstChange = useRef(true);
   const isFirstSliderChange = useRef(true);
   const sessionRef = useRef<any>(null);
+
+  useEffect(() => {
+    const f = async() => {
+      if (!docIsReadonly) {
+        return;
+      }
+      const notebookPath = extractFilenameFromURL(apiURL)
+      const response = await requestDocumentTimeline(
+        format,
+        contentType,
+        notebookPath
+      );
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error('Not found');
+        } else if (response.status === 503) {
+          throw new Error('WebSocket closed');
+        } else {
+          throw new Error(`Failed to fetch data: ${response.statusText}`);
+        }
+      }
+
+      const text = await response.text();
+      let data = {forkRoom: '', sessionId: ''};
+      data = JSON.parse(text);
+      // make document read-only
+      provider.connectToForkDoc(data.forkRoom, data.sessionId);
+    }
+    f();
+  }, [])
 
   async function fetchTimeline(notebookPath: string) {
     try {
