@@ -283,7 +283,7 @@ export const TimelineSliderComponent: React.FC<Props> = ({
           <div>
             <strong>{extractFilenameFromURL(apiURL).split('/').pop()} </strong>{' '}
           </div>
-          {isBtn && !projectIsComplete && (
+          {isBtn && !(projectIsComplete || docIsReadonly) && (
             <div className="jp-restoreBtnContainer">
               <button
                 onClick={handleRestore}

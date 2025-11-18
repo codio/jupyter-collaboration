@@ -6440,7 +6440,7 @@ __metadata:
 
 "docprovider-codio@file:../docprovider-codio::locator=%40jupyter%2Fcollaboration-extension%40workspace%3Apackages%2Fcollaboration-extension":
   version: 4.1.1
-  resolution: "docprovider-codio@file:../docprovider-codio#../docprovider-codio::hash=8ac23d&locator=%40jupyter%2Fcollaboration-extension%40workspace%3Apackages%2Fcollaboration-extension"
+  resolution: "docprovider-codio@file:../docprovider-codio#../docprovider-codio::hash=55f692&locator=%40jupyter%2Fcollaboration-extension%40workspace%3Apackages%2Fcollaboration-extension"
   dependencies:
     "@jupyter/collaborative-drive": ^4.1.1
     "@jupyter/ydoc": ^2.1.3 || ^3.0.0
@@ -6457,13 +6457,13 @@ __metadata:
     y-protocols: ^1.0.5
     y-websocket: ^1.3.15
     yjs: ^13.5.40
-  checksum: 3b0e7a7ec7afe48ea55c881b0ca4773f7ed6931499e9251721e41f576e30a55ca25dc7eb1bfd7e227f30c1bc89c7277eb4a6caf42412aaa4001b5ccbe7eaef31
+  checksum: ded73041c6880642150908747936a32dc28572a654ec63841984e41b116ebbec6589d36ac57577581cda6dcd5d8db46b45b271e10b20403c5bf1a55ec2b01044
   languageName: node
   linkType: hard
 
 "docprovider-codio@file:../docprovider-codio::locator=docprovider-extension-codio%40workspace%3Apackages%2Fdocprovider-extension-codio":
   version: 4.1.1
-  resolution: "docprovider-codio@file:../docprovider-codio#../docprovider-codio::hash=8ac23d&locator=docprovider-extension-codio%40workspace%3Apackages%2Fdocprovider-extension-codio"
+  resolution: "docprovider-codio@file:../docprovider-codio#../docprovider-codio::hash=55f692&locator=docprovider-extension-codio%40workspace%3Apackages%2Fdocprovider-extension-codio"
   dependencies:
     "@jupyter/collaborative-drive": ^4.1.1
     "@jupyter/ydoc": ^2.1.3 || ^3.0.0
@@ -6480,7 +6480,7 @@ __metadata:
     y-protocols: ^1.0.5
     y-websocket: ^1.3.15
     yjs: ^13.5.40
-  checksum: 3b0e7a7ec7afe48ea55c881b0ca4773f7ed6931499e9251721e41f576e30a55ca25dc7eb1bfd7e227f30c1bc89c7277eb4a6caf42412aaa4001b5ccbe7eaef31
+  checksum: ded73041c6880642150908747936a32dc28572a654ec63841984e41b116ebbec6589d36ac57577581cda6dcd5d8db46b45b271e10b20403c5bf1a55ec2b01044
   languageName: node
   linkType: hard
 
