@@ -1,13 +1,15 @@
 name: "Publish Changelog"
-on:
-  release:
-    types: [published]
+# trigger manually
+on: workflow_dispatch
+# on:
+#   release:
+#     types: [published]
 
-  workflow_dispatch:
-    inputs:
-      branch:
-        description: "The branch to target"
-        required: false
+#   workflow_dispatch:
+#     inputs:
+#       branch:
+#         description: "The branch to target"
+#         required: false
 
 jobs:
   publish_changelog:
