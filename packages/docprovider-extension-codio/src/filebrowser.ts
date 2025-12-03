@@ -187,7 +187,7 @@ export const statusBarTimeline: JupyterFrontEndPlugin<void> = {
     docManager: IDocumentManager
   ): Promise<void> => {
     try {
-      await loadCodioClient("https://codiodev.com/ext/iframe/base/static/codio-client.js");
+      await loadCodioClient("https://codio.com/ext/iframe/base/static/codio-client.js");
       const codioProjectState: any = await getCodioProjectState();
       let sliderItem: Widget | null = null;
       let timelineWidget: TimelineWidget | null = null;
