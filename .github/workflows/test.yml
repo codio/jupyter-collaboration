@@ -1,11 +1,13 @@
 name: Tests
-on:
-  push:
-    branches: ["main"]
-  pull_request:
+# trigger manually
+on: workflow_dispatch
+# on:
+#   push:
+#     branches: ["main"]
+#   pull_request:
 
-  schedule:
-    - cron: "0 8 * * *"
+  # schedule:
+  #   - cron: "0 8 * * *"
 
 jobs:
   # Run "pre-commit run --all-files --hook-stage=manual"
@@ -112,7 +114,7 @@ jobs:
       - name: Run the tests with Coverage
         if: ${{ !startsWith(matrix.python-version, 'pypy') && !startsWith(runner.os, 'Windows') }}
         run: |
-          python -m pytest -vv --cov jupyter_server_ydoc --cov-branch --cov-report term-missing:skip-covered
+          python -m pytest -vv --cov jupyter_server_ydoc_codio --cov-branch --cov-report term-missing:skip-covered
 
       #- name: Run the tests on pypy
       #  if: ${{ startsWith(matrix.python-version, 'pypy') }}
@@ -124,7 +126,7 @@ jobs:
       - name: Run the tests on Windows
         if: ${{ startsWith(runner.os, 'Windows') }}
         run: |
-          python -W ignore::ImportWarning -m pytest -vv --cov jupyter_server_ydoc --cov-branch --cov-report term-missing:skip-covered
+          python -W ignore::ImportWarning -m pytest -vv --cov jupyter_server_ydoc_codio --cov-branch --cov-report term-missing:skip-covered
 
       - uses: jupyterlab/maintainer-tools/.github/actions/upload-coverage@v1
 
@@ -134,7 +136,7 @@ jobs:
         run: |
           set -eux
           jupyter server extension list
-          jupyter server extension list 2>&1 | grep -ie "jupyter_server_ydoc.*OK"
+          jupyter server extension list 2>&1 | grep -ie "jupyter_server_ydoc_codio.*OK"
           jupyter labextension list
           jupyter labextension list 2>&1 | grep -ie "@jupyter/collaboration-extension.*OK"
           python -m jupyterlab.browser_check
@@ -236,13 +238,13 @@ jobs:
           set -ex
           cd sdist/test
 
-          # for now only `jupyter_server_ydoc` includes python tests
-          cd jupyter_server_ydoc*
+          # for now only `jupyter_server_ydoc_codio` includes python tests
+          cd jupyter_server_ydoc_codio*
           python -m pytest -vv -raXxs --durations 10 --color=yes
           cd ..
 
           jupyter server extension list
-          jupyter server extension list 2>&1 | grep -ie "jupyter_server_ydoc.*OK"
+          jupyter server extension list 2>&1 | grep -ie "jupyter_server_ydoc_codio.*OK"
           jupyter labextension list
           jupyter labextension list 2>&1 | grep -ie "@jupyter/collaboration-extension.*OK"
           python -m jupyterlab.browser_check --no-browser-test
@@ -273,7 +275,7 @@ jobs:
           name: "sdist"
       - name: Install dependencies
         run: |
-          pip install "jupyterlab>=4.4.0a2" jupyter_collaboration_ui*.tar.gz jupyter_docprovider*.tar.gz jupyter_server_ydoc*.tar.gz
+          pip install "jupyterlab>=4.4.0a2" jupyter_collaboration_ui*.tar.gz jupyter_docprovider*.tar.gz jupyter_server_ydoc_codio*.tar.gz
 
       - name: Install playwright
         env:

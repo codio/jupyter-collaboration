@@ -1,9 +1,11 @@
 name: Check Release
-on:
-  push:
-    branches: ["main"]
-  pull_request:
-    branches: ["*"]
+# trigger manually
+on: workflow_dispatch
+# on:
+#   push:
+#     branches: ["main"]
+#   pull_request:
+#     branches: ["*"]
 
 permissions:
   contents: write

@@ -3,7 +3,7 @@
   "entryPoints": [
     "packages/collaboration",
     "packages/collaborative-drive",
-    "packages/docprovider"
+    "packages/docprovider-codio"
   ],
   "externalSymbolLinkMappings": {
     "@codemirror/state": {

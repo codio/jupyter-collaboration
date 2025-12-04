@@ -11,18 +11,18 @@ contain the root `toctree` directive.
 From JupyterLab v4, file documents and notebooks have collaborative
 editing using the [Yjs shared editing framework](https://github.com/yjs/yjs).
 Editors are not collaborative by default; to activate it, install the extension
-`jupyter_collaboration`.
+`jupyter_collaboration_codio`.
 
 Installation using mamba/conda:
 
 ```sh
-mamba install -c conda-forge jupyter-collaboration
+mamba install -c conda-forge jupyter-collaboration-codio
 ```
 
 Installation using pip:
 
 ```sh
-pip install jupyter-collaboration
+pip install jupyter-collaboration-codio
 ```
 
 The new collaborative editing feature enables collaboration in real-time

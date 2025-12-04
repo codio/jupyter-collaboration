@@ -18,3 +18,5 @@ jupyter_collaboration
 packages/collaboration/babel.config.js
 packages/docprovider/babel.config.js
 packages/docprovider/jest.config.js
+packages/docprovider-codio/babel.config.js
+packages/docprovider-codio/jest.config.js
