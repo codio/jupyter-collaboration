@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 requires = ["hatchling>=1.4.0", "hatch-nodejs-version", "jupyterlab>=4.0.0"]
 
 [project]
-name = "jupyter-collaboration-monorepo"
+name = "jupyter-collaboration-monorepo-codio"
 requires-python = ">=3.8"
 dependencies = [
     # jupyter-server extensions
@@ -15,7 +15,7 @@ dependencies = [
     "jupyter-collaboration-ui-codio @ {root:uri}/projects/jupyter-collaboration-ui-codio",
     "jupyter-docprovider-codio @ {root:uri}/projects/jupyter-docprovider-codio",
     # the metapackage
-    "jupyter-collaboration @ {root:uri}/projects/jupyter-collaboration",
+    "jupyter-collaboration-codio @ {root:uri}/projects/jupyter-collaboration-codio",
 ]
 dynamic = ["version"]
 
@@ -49,7 +49,7 @@ packages = [
     "projects/jupyter-server-ydoc-codio",
     "projects/jupyter-collaboration-ui-codio",
     "projects/jupyter-docprovider-codio",
-    "projects/jupyter-collaboration"
+    "projects/jupyter-collaboration-codio"
 ]
 
 [tool.hatch.metadata]
@@ -65,11 +65,12 @@ python_packages = [
     "projects/jupyter-server-ydoc-codio:jupyter-server-ydoc-codio",
     "projects/jupyter-collaboration-ui-codio:jupyter-collaboration-ui-codio",
     "projects/jupyter-docprovider-codio:jupyter-docprovider-codio",
-    "projects/jupyter-collaboration:jupyter-collaboration"
+    "projects/jupyter-collaboration-codio:jupyter-collaboration-codio"
 ]
 
 [tool.jupyter-releaser.hooks]
 before-build-npm = [
+    "jlpm --version",
     "YARN_ENABLE_IMMUTABLE_INSTALLS=0 jlpm build:prod"
 ]
 before-build-python = [

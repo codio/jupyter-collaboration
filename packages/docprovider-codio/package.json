@@ -41,7 +41,7 @@
     "watch": "tsc -b --watch"
   },
   "dependencies": {
-    "@jupyter/collaborative-drive": "^4.1.1",
+    "@codioedu/jupyter-collaborative-drive-codio": "^4.1.1",
     "@jupyter/ydoc": "^2.1.3 || ^3.0.0",
     "@jupyterlab/apputils": "^4.4.0",
     "@jupyterlab/cells": "^4.4.0",
@@ -72,7 +72,7 @@
   },
   "jupyterlab": {
     "sharedPackages": {
-      "@jupyter/collaborative-drive": {
+      "@codioedu/jupyter-collaborative-drive-codio": {
         "bundled": true,
         "singleton": true
       }

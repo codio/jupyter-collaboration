@@ -1542,6 +1542,95 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@codioedu/jupyter-collaboration-codio@^4.1.1, @codioedu/jupyter-collaboration-codio@workspace:packages/jupyter-collaboration-codio":
+  version: 0.0.0-use.local
+  resolution: "@codioedu/jupyter-collaboration-codio@workspace:packages/jupyter-collaboration-codio"
+  dependencies:
+    "@codemirror/state": ^6.2.0
+    "@codemirror/view": ^6.7.0
+    "@jupyterlab/apputils": ^4.4.0
+    "@jupyterlab/coreutils": ^6.4.0
+    "@jupyterlab/docregistry": ^4.4.0
+    "@jupyterlab/rendermime-interfaces": ^3.12.0
+    "@jupyterlab/services": ^7.4.0
+    "@jupyterlab/ui-components": ^4.4.0
+    "@lumino/coreutils": ^2.2.1
+    "@lumino/signaling": ^2.1.4
+    "@lumino/virtualdom": ^2.0.3
+    "@lumino/widgets": ^2.7.0
+    "@types/react": ~18.3.1
+    react: ^18.2.0
+    rimraf: ^4.1.2
+    typescript: ~5.1.6
+    y-protocols: ^1.0.5
+    yjs: ^13.5.40
+  languageName: unknown
+  linkType: soft
+
+"@codioedu/jupyter-collaboration-extension-codio@workspace:packages/jupyter-collaboration-extension-codio":
+  version: 0.0.0-use.local
+  resolution: "@codioedu/jupyter-collaboration-extension-codio@workspace:packages/jupyter-collaboration-extension-codio"
+  dependencies:
+    "@codioedu/jupyter-collaboration-codio": ^4.1.1
+    "@codioedu/jupyter-collaborative-drive-codio": ^4.1.1
+    "@jupyter/ydoc": ^2.1.3 || ^3.0.0
+    "@jupyterlab/application": ^4.4.0
+    "@jupyterlab/apputils": ^4.4.0
+    "@jupyterlab/builder": ^4.4.0
+    "@jupyterlab/codemirror": ^4.4.0
+    "@jupyterlab/coreutils": ^6.4.0
+    "@jupyterlab/services": ^7.4.0
+    "@jupyterlab/statedb": ^4.4.0
+    "@jupyterlab/translation": ^4.4.0
+    "@jupyterlab/ui-components": ^4.4.0
+    "@lumino/widgets": ^2.7.0
+    "@types/react": ~18.3.1
+    docprovider-codio: ../docprovider-codio
+    npm-run-all: ^4.1.5
+    rimraf: ^4.1.2
+    typescript: ~5.1.6
+    y-protocols: ^1.0.5
+    y-websocket: ^1.3.15
+    yjs: ^13.5.40
+  languageName: unknown
+  linkType: soft
+
+"@codioedu/jupyter-collaborative-drive-codio@^4.1.1, @codioedu/jupyter-collaborative-drive-codio@workspace:packages/jupyter-collaborative-drive-codio":
+  version: 0.0.0-use.local
+  resolution: "@codioedu/jupyter-collaborative-drive-codio@workspace:packages/jupyter-collaborative-drive-codio"
+  dependencies:
+    "@jupyter/ydoc": ^2.1.3 || ^3.0.0
+    "@jupyterlab/services": ^7.4.0
+    "@lumino/coreutils": ^2.2.1
+    "@lumino/disposable": ^2.1.4
+    rimraf: ^4.1.2
+    typescript: ~5.1.6
+  languageName: unknown
+  linkType: soft
+
+"@codioedu/jupyter-real-time-collaboration-codio@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "@codioedu/jupyter-real-time-collaboration-codio@workspace:."
+  dependencies:
+    "@typescript-eslint/eslint-plugin": ~5.55.0
+    "@typescript-eslint/parser": ~5.55.0
+    eslint: ~8.36.0
+    eslint-config-prettier: ~8.7.0
+    eslint-plugin-jest: ~27.2.1
+    eslint-plugin-prettier: ~4.2.1
+    eslint-plugin-react: ~7.32.2
+    lerna: ^6.5.1
+    prettier: ^2.8.4
+    rimraf: ^4.1.2
+    stylelint: ^15.2.0
+    stylelint-config-recommended: ^10.0.0
+    stylelint-config-standard: ^30.0.1
+    stylelint-prettier: ^3.0.0
+    typedoc: ~0.23.28
+    typescript: ~5.1.6
+  languageName: unknown
+  linkType: soft
+
 "@csstools/css-parser-algorithms@npm:^2.3.1":
   version: 2.7.1
   resolution: "@csstools/css-parser-algorithms@npm:2.7.1"
@@ -2021,72 +2110,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupyter/collaboration-extension@workspace:packages/collaboration-extension":
-  version: 0.0.0-use.local
-  resolution: "@jupyter/collaboration-extension@workspace:packages/collaboration-extension"
-  dependencies:
-    "@jupyter/collaboration": ^4.1.1
-    "@jupyter/collaborative-drive": ^4.1.1
-    "@jupyter/ydoc": ^2.1.3 || ^3.0.0
-    "@jupyterlab/application": ^4.4.0
-    "@jupyterlab/apputils": ^4.4.0
-    "@jupyterlab/builder": ^4.4.0
-    "@jupyterlab/codemirror": ^4.4.0
-    "@jupyterlab/coreutils": ^6.4.0
-    "@jupyterlab/services": ^7.4.0
-    "@jupyterlab/statedb": ^4.4.0
-    "@jupyterlab/translation": ^4.4.0
-    "@jupyterlab/ui-components": ^4.4.0
-    "@lumino/widgets": ^2.7.0
-    "@types/react": ~18.3.1
-    docprovider-codio: ../docprovider-codio
-    npm-run-all: ^4.1.5
-    rimraf: ^4.1.2
-    typescript: ~5.1.6
-    y-protocols: ^1.0.5
-    y-websocket: ^1.3.15
-    yjs: ^13.5.40
-  languageName: unknown
-  linkType: soft
-
-"@jupyter/collaboration@^4.1.1, @jupyter/collaboration@workspace:packages/collaboration":
-  version: 0.0.0-use.local
-  resolution: "@jupyter/collaboration@workspace:packages/collaboration"
-  dependencies:
-    "@codemirror/state": ^6.2.0
-    "@codemirror/view": ^6.7.0
-    "@jupyterlab/apputils": ^4.4.0
-    "@jupyterlab/coreutils": ^6.4.0
-    "@jupyterlab/docregistry": ^4.4.0
-    "@jupyterlab/rendermime-interfaces": ^3.12.0
-    "@jupyterlab/services": ^7.4.0
-    "@jupyterlab/ui-components": ^4.4.0
-    "@lumino/coreutils": ^2.2.1
-    "@lumino/signaling": ^2.1.4
-    "@lumino/virtualdom": ^2.0.3
-    "@lumino/widgets": ^2.7.0
-    "@types/react": ~18.3.1
-    react: ^18.2.0
-    rimraf: ^4.1.2
-    typescript: ~5.1.6
-    y-protocols: ^1.0.5
-    yjs: ^13.5.40
-  languageName: unknown
-  linkType: soft
-
-"@jupyter/collaborative-drive@^4.1.1, @jupyter/collaborative-drive@workspace:packages/collaborative-drive":
-  version: 0.0.0-use.local
-  resolution: "@jupyter/collaborative-drive@workspace:packages/collaborative-drive"
-  dependencies:
-    "@jupyter/ydoc": ^2.1.3 || ^3.0.0
-    "@jupyterlab/services": ^7.4.0
-    "@lumino/coreutils": ^2.2.1
-    "@lumino/disposable": ^2.1.4
-    rimraf: ^4.1.2
-    typescript: ~5.1.6
-  languageName: unknown
-  linkType: soft
-
 "@jupyter/react-components@npm:^0.16.6":
   version: 0.16.7
   resolution: "@jupyter/react-components@npm:0.16.7"
@@ -2096,29 +2119,6 @@ __metadata:
   checksum: 37894347e63ebb528725e8b8b4038d138019823f5c9e28e3f6abb93b46d771b2ee3cc004d5ff7d9a06a93f2d90e41000bd2abae14364be34ba99c5e05864810e
   languageName: node
   linkType: hard
-
-"@jupyter/real-time-collaboration@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "@jupyter/real-time-collaboration@workspace:."
-  dependencies:
-    "@typescript-eslint/eslint-plugin": ~5.55.0
-    "@typescript-eslint/parser": ~5.55.0
-    eslint: ~8.36.0
-    eslint-config-prettier: ~8.7.0
-    eslint-plugin-jest: ~27.2.1
-    eslint-plugin-prettier: ~4.2.1
-    eslint-plugin-react: ~7.32.2
-    lerna: ^6.5.1
-    prettier: ^2.8.4
-    rimraf: ^4.1.2
-    stylelint: ^15.2.0
-    stylelint-config-recommended: ^10.0.0
-    stylelint-config-standard: ^30.0.1
-    stylelint-prettier: ^3.0.0
-    typedoc: ~0.23.28
-    typescript: ~5.1.6
-  languageName: unknown
-  linkType: soft
 
 "@jupyter/web-components@npm:^0.16.6, @jupyter/web-components@npm:^0.16.7":
   version: 0.16.7
@@ -6438,11 +6438,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"docprovider-codio@file:../docprovider-codio::locator=%40jupyter%2Fcollaboration-extension%40workspace%3Apackages%2Fcollaboration-extension":
+"docprovider-codio@file:../docprovider-codio::locator=%40codioedu%2Fjupyter-collaboration-extension-codio%40workspace%3Apackages%2Fjupyter-collaboration-extension-codio":
   version: 4.1.1
-  resolution: "docprovider-codio@file:../docprovider-codio#../docprovider-codio::hash=55f692&locator=%40jupyter%2Fcollaboration-extension%40workspace%3Apackages%2Fcollaboration-extension"
+  resolution: "docprovider-codio@file:../docprovider-codio#../docprovider-codio::hash=509ba4&locator=%40codioedu%2Fjupyter-collaboration-extension-codio%40workspace%3Apackages%2Fjupyter-collaboration-extension-codio"
   dependencies:
-    "@jupyter/collaborative-drive": ^4.1.1
+    "@codioedu/jupyter-collaborative-drive-codio": ^4.1.1
     "@jupyter/ydoc": ^2.1.3 || ^3.0.0
     "@jupyterlab/apputils": ^4.4.0
     "@jupyterlab/cells": ^4.4.0
@@ -6457,15 +6457,15 @@ __metadata:
     y-protocols: ^1.0.5
     y-websocket: ^1.3.15
     yjs: ^13.5.40
-  checksum: ded73041c6880642150908747936a32dc28572a654ec63841984e41b116ebbec6589d36ac57577581cda6dcd5d8db46b45b271e10b20403c5bf1a55ec2b01044
+  checksum: f678abe30b0d1fd6aa808d9b16ed5478e62651a10f1f0ff357703ed8514f6c792acfcc8432f87a2268f9345835395b097b14c0b7e54023cbe44bd9dc816c1700
   languageName: node
   linkType: hard
 
 "docprovider-codio@file:../docprovider-codio::locator=docprovider-extension-codio%40workspace%3Apackages%2Fdocprovider-extension-codio":
   version: 4.1.1
-  resolution: "docprovider-codio@file:../docprovider-codio#../docprovider-codio::hash=55f692&locator=docprovider-extension-codio%40workspace%3Apackages%2Fdocprovider-extension-codio"
+  resolution: "docprovider-codio@file:../docprovider-codio#../docprovider-codio::hash=509ba4&locator=docprovider-extension-codio%40workspace%3Apackages%2Fdocprovider-extension-codio"
   dependencies:
-    "@jupyter/collaborative-drive": ^4.1.1
+    "@codioedu/jupyter-collaborative-drive-codio": ^4.1.1
     "@jupyter/ydoc": ^2.1.3 || ^3.0.0
     "@jupyterlab/apputils": ^4.4.0
     "@jupyterlab/cells": ^4.4.0
@@ -6480,7 +6480,7 @@ __metadata:
     y-protocols: ^1.0.5
     y-websocket: ^1.3.15
     yjs: ^13.5.40
-  checksum: ded73041c6880642150908747936a32dc28572a654ec63841984e41b116ebbec6589d36ac57577581cda6dcd5d8db46b45b271e10b20403c5bf1a55ec2b01044
+  checksum: f678abe30b0d1fd6aa808d9b16ed5478e62651a10f1f0ff357703ed8514f6c792acfcc8432f87a2268f9345835395b097b14c0b7e54023cbe44bd9dc816c1700
   languageName: node
   linkType: hard
 
@@ -6488,7 +6488,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "docprovider-codio@workspace:packages/docprovider-codio"
   dependencies:
-    "@jupyter/collaborative-drive": ^4.1.1
+    "@codioedu/jupyter-collaborative-drive-codio": ^4.1.1
     "@jupyter/ydoc": ^2.1.3 || ^3.0.0
     "@jupyterlab/apputils": ^4.4.0
     "@jupyterlab/cells": ^4.4.0
@@ -6515,7 +6515,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "docprovider-extension-codio@workspace:packages/docprovider-extension-codio"
   dependencies:
-    "@jupyter/collaborative-drive": ^4.1.1
+    "@codioedu/jupyter-collaborative-drive-codio": ^4.1.1
     "@jupyter/ydoc": ^2.1.3 || ^3.0.0
     "@jupyterlab/application": ^4.4.0
     "@jupyterlab/apputils": ^4.4.0

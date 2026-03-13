@@ -3,4 +3,4 @@
 | Distributed under the terms of the Modified BSD License.
 |----------------------------------------------------------------------------*/
 
-import '@jupyter/collaboration/style/index.js';
+import '@codioedu/jupyter-collaboration-codio/style/index.js';

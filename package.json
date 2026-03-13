@@ -1,8 +1,8 @@
 {
-  "name": "@jupyter/real-time-collaboration",
+  "name": "@codioedu/jupyter-real-time-collaboration-codio",
   "private": true,
   "version": "4.1.1",
-  "description": "Codio fork of JupyterLab Extension enabling Real-Time Collaboration",
+  "description": "Codio fork of JupyterLab Extension @jupyter/real-time-collaboration enabling Real-Time Collaboration",
   "keywords": [
     "jupyter",
     "jupyterlab",

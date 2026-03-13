@@ -37,7 +37,7 @@ dynamic = ["version"]
 Documentation = "https://jupyterlab-realtime-collaboration.readthedocs.io/"
 Repository = "https://github.com/codio/jupyter-collaboration"
 Changelog = "https://jupyterlab-realtime-collaboration.readthedocs.io/en/latest/changelog.html"
-Source = "https://github.com/codio/jupyter-collaboration/tree/main/packages/collaboration-extension"
+Source = "https://github.com/codio/jupyter-collaboration/tree/main/packages/jupyter-collaboration-extension-codio"
 Issues = "https://github.com/codio/jupyter-collaboration/issues/new/choose"
 
 [tool.hatch.version]
@@ -51,8 +51,8 @@ exclude = ["/.github", "/binder", "node_modules"]
 "../../packages" = "packages"
 
 [tool.hatch.build.targets.wheel.shared-data]
-"jupyter_collaboration_ui/labextension" = "share/jupyter/labextensions/@jupyter/collaboration-extension"
-"install.json" = "share/jupyter/labextensions/@jupyter/collaboration-extension/install.json"
+"jupyter_collaboration_ui/labextension" = "share/jupyter/labextensions/@codioedu/jupyter-collaboration-extension-codio"
+"install.json" = "share/jupyter/labextensions/@codioedu/jupyter-collaboration-extension-codio/install.json"
 
 [tool.hatch.build.hooks.jupyter-builder]
 dependencies = ["hatch-jupyter-builder>=0.5"]
