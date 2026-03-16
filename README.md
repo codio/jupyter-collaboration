@@ -74,3 +74,21 @@ to install
 ```
 python -m pip install jupyter-server-ydoc-codio
 ```
+
+
+TMP:
+
+Using default value for dist_dir: 'dist'
+Adding option override for --python-packages: '['
+projects/jupyter-server-ydoc-codio:jupyter-server-ydoc-codio
+', '
+projects/jupyter-collaboration-ui-codio:jupyter-collaboration-ui-codio
+', '
+projects/jupyter-docprovider-codio:jupyter-docprovider-codio
+', '
+projects/jupyter-collaboration-codio:jupyter-collaboration-codio
+']
+Using default value for help: 'False'
+
+
+pipx run build --outdir ../../dist .

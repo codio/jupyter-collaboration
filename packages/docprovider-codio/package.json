@@ -64,7 +64,9 @@
     "rimraf": "^4.1.2",
     "typescript": "~5.1.6"
   },
-  "private": true,
+  "publishConfig": {
+    "access": "public"
+  },
   "typedoc": {
     "entryPoint": "./src/index.ts",
     "displayName": "docprovider-codio",
