@@ -91,4 +91,7 @@ projects/jupyter-collaboration-codio:jupyter-collaboration-codio
 Using default value for help: 'False'
 
 
-pipx run build --outdir ../../dist .
+`pipx run build --outdir ../../dist .`
+
+manually run `npm run build:prod`
+for packages/
