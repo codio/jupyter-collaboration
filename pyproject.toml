@@ -70,7 +70,6 @@ python_packages = [
 
 [tool.jupyter-releaser.hooks]
 before-build-npm = [
-    "jlpm --version",
     "YARN_ENABLE_IMMUTABLE_INSTALLS=0 jlpm build:prod"
 ]
 before-build-python = [

@@ -1,5 +1,5 @@
 {
-  "name": "@codioedu/jupyter-real-time-collaboration-codio",
+  "name": "jupyter-real-time-collaboration-codio",
   "private": true,
   "version": "4.1.1",
   "description": "Codio fork of JupyterLab Extension @jupyter/real-time-collaboration enabling Real-Time Collaboration",
@@ -57,7 +57,7 @@
     "eslint-plugin-jest": "~27.2.1",
     "eslint-plugin-prettier": "~4.2.1",
     "eslint-plugin-react": "~7.32.2",
-    "lerna": "^6.5.1",
+    "lerna": "^9.0.7",
     "prettier": "^2.8.4",
     "rimraf": "^4.1.2",
     "stylelint": "^15.2.0",

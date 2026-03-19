@@ -95,3 +95,24 @@ Using default value for help: 'False'
 
 manually run `npm run build:prod`
 for packages/
+
+
+run_action("jupyter-releaser prep-git")
+<!-- run_action("jupyter-releaser ensure-sha") -->
+run_action("jupyter-releaser bump-version")
+<!-- run_action("jupyter-releaser extract-changelog") -->
+
+# Make sure npm comes before python in case it produces
+# files for the python package
+run_action("jupyter-releaser build-npm")
+run_action("jupyter-releaser check-npm")
+run_action("jupyter-releaser build-python")
+run_action("jupyter-releaser check-python")
+<!-- run_action("jupyter-releaser tag-release") -->
+<!-- run_action("jupyter-releaser ensure-sha") -->
+<!-- run_action("jupyter-releaser populate-release") -->
+
+```
+cd .jupyter_releaser_checkout
+twine upload --repository testpypi dist/* --verbose
+```

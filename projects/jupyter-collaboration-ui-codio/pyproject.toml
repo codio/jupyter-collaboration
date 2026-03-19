@@ -51,8 +51,8 @@ exclude = ["/.github", "/binder", "node_modules"]
 "../../packages" = "packages"
 
 [tool.hatch.build.targets.wheel.shared-data]
-"jupyter_collaboration_ui_codio/labextension" = "share/jupyter/labextensions/@codioedu/jupyter-collaboration-extension-codio"
-"install.json" = "share/jupyter/labextensions/@codioedu/jupyter-collaboration-extension-codio/install.json"
+"jupyter_collaboration_ui_codio/labextension" = "share/jupyter/labextensions/jupyter-collaboration-extension-codio"
+"install.json" = "share/jupyter/labextensions/jupyter-collaboration-extension-codio/install.json"
 
 [tool.hatch.build.hooks.jupyter-builder]
 dependencies = ["hatch-jupyter-builder>=0.5"]

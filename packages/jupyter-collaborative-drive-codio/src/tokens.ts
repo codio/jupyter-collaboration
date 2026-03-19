@@ -12,14 +12,14 @@ import { Token } from '@lumino/coreutils';
  */
 export const ICollaborativeContentProvider =
   new Token<ICollaborativeContentProvider>(
-    '@codioedu/jupyter-collaborative-drive-codio:ICollaborativeContentProvider'
+    'jupyter-collaborative-drive-codio:ICollaborativeContentProvider'
   );
 
 /**
  * The global awareness token.
  */
 export const IGlobalAwareness = new Token<IAwareness>(
-  '@codioedu/jupyter-collaboration-codio:IGlobalAwareness'
+  'jupyter-collaboration-codio:IGlobalAwareness'
 );
 
 export interface ICollaborativeContentProvider {

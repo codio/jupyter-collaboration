@@ -5,4 +5,4 @@ from ._version import __version__  # noqa
 
 
 def _jupyter_labextension_paths():
-    return [{"src": "labextension", "dest": "@codioedu/jupyter-collaboration-extension-codio"}]
+    return [{"src": "labextension", "dest": "jupyter-collaboration-extension-codio"}]

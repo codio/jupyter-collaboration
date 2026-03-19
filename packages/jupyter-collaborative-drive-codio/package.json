@@ -1,5 +1,5 @@
 {
-  "name": "@codioedu/jupyter-collaborative-drive-codio",
+  "name": "jupyter-collaborative-drive-codio",
   "version": "4.1.1",
   "description": "Codio fork of JupyterLab @jupyter/collaborative-drive - Collaborative Drive",
   "homepage": "https://github.com/codio/jupyter-collaboration",
@@ -51,7 +51,7 @@
   },
   "typedoc": {
     "entryPoint": "./src/index.ts",
-    "displayName": "@codioedu/jupyter-collaborative-drive-codio",
+    "displayName": "jupyter-collaborative-drive-codio",
     "tsconfig": "./tsconfig.json"
   }
 }

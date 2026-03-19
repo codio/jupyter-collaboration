@@ -1,5 +1,5 @@
 {
-  "name": "@codioedu/jupyter-collaboration-codio",
+  "name": "jupyter-collaboration-codio",
   "version": "4.1.1",
   "description": "Codio fork of JupyterLab @jupyter/collaboration - Real-Time Collaboration Widgets",
   "homepage": "https://github.com/codio/jupyter-collaboration",
@@ -66,7 +66,7 @@
   "typedoc": {
     "entryPoint": "./src/index.ts",
     "readmeFile": "./README.md",
-    "displayName": "@codioedu/jupyter-collaboration-codio",
+    "displayName": "jupyter-collaboration-codio",
     "tsconfig": "./tsconfig.json"
   },
   "styleModule": "style/index.js"

@@ -138,7 +138,7 @@ jobs:
           jupyter server extension list
           jupyter server extension list 2>&1 | grep -ie "jupyter_server_ydoc_codio.*OK"
           jupyter labextension list
-          jupyter labextension list 2>&1 | grep -ie "@codioedu/jupyter-collaboration-codio.*OK"
+          jupyter labextension list 2>&1 | grep -ie "jupyter-collaboration-codio.*OK"
           python -m jupyterlab.browser_check
 
   test_minimum_versions:
@@ -246,7 +246,7 @@ jobs:
           jupyter server extension list
           jupyter server extension list 2>&1 | grep -ie "jupyter_server_ydoc_codio.*OK"
           jupyter labextension list
-          jupyter labextension list 2>&1 | grep -ie "@codioedu/jupyter-collaboration-extension-codio.*OK"
+          jupyter labextension list 2>&1 | grep -ie "jupyter-collaboration-extension-codio.*OK"
           python -m jupyterlab.browser_check --no-browser-test
           echo "::endgroup::"
 

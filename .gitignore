@@ -133,3 +133,4 @@ docs/source/changelog.md
 packages/docprovider/junit.xml
 packages/docprovider-codio/junit.xml
 .jupyter_ystore.db
+.nx
