@@ -82,6 +82,7 @@ before-build-python = [
 before-bump-version = [
     "python -m pip install -U jupyterlab tomlkit",
     "pip list | grep jupyterlab",
+    "pip list | grep setuptools",
     "jlpm --version",
     "jlpm"
 ]
