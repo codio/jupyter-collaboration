@@ -1,4 +1,4 @@
-name: "Step 2: Publish Release"
+name: "Step 2: Publish Release on test pypi repo"
 on:
   workflow_dispatch:
     inputs:
@@ -39,7 +39,8 @@ jobs:
       - name: Finalize Release
         id: finalize-release
         env:
-          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+          TWINE_REPOSITORY_URL: ${{ secrets.TWINE_REPOSITORY_URL_TEST }}
+          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN_TEST }}
           RH_NPM_COMMAND: "true"
         uses: jupyter-server/jupyter_releaser/.github/actions/finalize-release@v2
         with:
