@@ -39,7 +39,6 @@ jobs:
       - name: Finalize Release
         id: finalize-release
         env:
-          TWINE_REPOSITORY_URL: ${{ secrets.TWINE_REPOSITORY_URL }}
           PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
           RH_NPM_COMMAND: "true"
         uses: jupyter-server/jupyter_releaser/.github/actions/finalize-release@v2
