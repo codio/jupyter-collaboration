@@ -22,6 +22,17 @@
         }
       }
     },
+    "docprovider-codio": {
+      "root": "packages/docprovider-codio",
+      "targets": {
+        "build": {
+          "executor": "nx:run-script",
+          "options": {
+            "script": "build"
+          }
+        }
+      }
+    },
     "jupyter-collaboration-codio": {
       "root": "packages/jupyter-collaboration-codio",
       "targets": {
