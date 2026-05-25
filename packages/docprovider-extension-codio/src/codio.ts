@@ -90,15 +90,15 @@ export const getCodioProjectState = async () => {
   const codioLoaded = () => {
     return new Promise((resolve, reject) => {
       if (!window.codio) {
-        resolve()
+        resolve(null)
       }
       window.codio?.loaded().then(() => {
         console.log('[docprovider-extension] codio loaded')
-        resolve()
+        resolve(null)
       })
       setTimeout(() => {
         console.log('[docprovider-extension] codio load timeout')
-        resolve()
+        resolve(null)
       }, 10 * 1000)
     })
   }
