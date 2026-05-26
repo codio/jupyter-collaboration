@@ -4,7 +4,7 @@
   "jupyter.lab.toolbars": {
     "TopBar": [
       {
-        "name": "@jupyter/collaboration:shared-link",
+        "name": "jupyter-collaboration-codio:shared-link",
         "command": "collaboration:shared-link",
         "rank": 99
       }

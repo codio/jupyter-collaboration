@@ -3,10 +3,10 @@
 
 [build-system]
 build-backend = "hatchling.build"
-requires = ["hatchling>=1.4.0", "hatch-nodejs-version", "jupyterlab>=4.0.0"]
+requires = ["hatchling>=1.4.0", "hatch-nodejs-version", "jupyterlab>=4.0.0", "setuptools<82.0.0"]
 
 [project]
-name = "jupyter-collaboration-monorepo"
+name = "jupyter-collaboration-monorepo-codio"
 requires-python = ">=3.8"
 dependencies = [
     # jupyter-server extensions
@@ -15,7 +15,7 @@ dependencies = [
     "jupyter-collaboration-ui-codio @ {root:uri}/projects/jupyter-collaboration-ui-codio",
     "jupyter-docprovider-codio @ {root:uri}/projects/jupyter-docprovider-codio",
     # the metapackage
-    "jupyter-collaboration @ {root:uri}/projects/jupyter-collaboration",
+    "jupyter-collaboration-codio @ {root:uri}/projects/jupyter-collaboration-codio",
 ]
 dynamic = ["version"]
 
@@ -49,14 +49,14 @@ packages = [
     "projects/jupyter-server-ydoc-codio",
     "projects/jupyter-collaboration-ui-codio",
     "projects/jupyter-docprovider-codio",
-    "projects/jupyter-collaboration"
+    "projects/jupyter-collaboration-codio"
 ]
 
 [tool.hatch.metadata]
 allow-direct-references = true
 
 [tool.jupyter-releaser]
-skip = ["check-links", "check-python"]
+skip = ["check-links", "check-python", "build-changelog"]
 
 [tool.jupyter-releaser.options]
 # `--skip-if-dirty` is a workaround for https://github.com/jupyter-server/jupyter_releaser/issues/567
@@ -65,7 +65,7 @@ python_packages = [
     "projects/jupyter-server-ydoc-codio:jupyter-server-ydoc-codio",
     "projects/jupyter-collaboration-ui-codio:jupyter-collaboration-ui-codio",
     "projects/jupyter-docprovider-codio:jupyter-docprovider-codio",
-    "projects/jupyter-collaboration:jupyter-collaboration"
+    "projects/jupyter-collaboration-codio:jupyter-collaboration-codio"
 ]
 
 [tool.jupyter-releaser.hooks]
@@ -80,7 +80,10 @@ before-build-python = [
     "jlpm clean:lib"
 ]
 before-bump-version = [
-    "python -m pip install -U jupyterlab tomlkit",
+    "python -m pip install -U jupyterlab tomlkit \"setuptools<82.0.0\"",
+    "pip list | grep jupyterlab",
+    "pip list | grep setuptools",
+    "jlpm --version",
     "jlpm"
 ]
 

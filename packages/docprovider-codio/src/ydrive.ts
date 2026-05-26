@@ -20,7 +20,7 @@ import { WebSocketProvider } from './yprovider';
 import {
   IDocumentProvider,
   ISharedModelFactory
-} from '@jupyter/collaborative-drive';
+} from '../../jupyter-collaborative-drive-codio/lib';
 import { Awareness } from 'y-protocols/awareness';
 import { ISettingRegistry } from '@jupyterlab/settingregistry';
 import * as decoding from 'lib0/decoding';

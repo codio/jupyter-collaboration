@@ -14,7 +14,7 @@ import {
   EditorExtensionRegistry,
   IEditorExtensionRegistry
 } from '@jupyterlab/codemirror';
-import { IGlobalAwareness } from '@jupyter/collaborative-drive';
+import { IGlobalAwareness } from '../../jupyter-collaborative-drive-codio/lib';
 import { WebSocketAwarenessProvider } from 'docprovider-codio';
 import { SidePanel, usersIcon } from '@jupyterlab/ui-components';
 import { URLExt } from '@jupyterlab/coreutils';
@@ -33,7 +33,7 @@ import {
   RendererUserMenu,
   UserInfoPanel,
   UserMenu
-} from '@jupyter/collaboration';
+} from 'jupyter-collaboration-codio';
 
 import * as Y from 'yjs';
 import { Awareness } from 'y-protocols/awareness';
@@ -42,7 +42,7 @@ import { Awareness } from 'y-protocols/awareness';
  * Jupyter plugin providing the IUserMenu.
  */
 export const userMenuPlugin: JupyterFrontEndPlugin<IUserMenu> = {
-  id: '@jupyter/collaboration-extension:userMenu',
+  id: 'jupyter-collaboration-codio:userMenu',
   description: 'Provide connected user menu.',
   requires: [],
   provides: IUserMenu,
@@ -57,7 +57,7 @@ export const userMenuPlugin: JupyterFrontEndPlugin<IUserMenu> = {
  * Jupyter plugin adding the IUserMenu to the menu bar if collaborative flag enabled.
  */
 export const menuBarPlugin: JupyterFrontEndPlugin<void> = {
-  id: '@jupyter/collaboration-extension:user-menu-bar',
+  id: 'jupyter-collaboration-codio:user-menu-bar',
   description: 'Add user menu to the interface.',
   autoStart: true,
   requires: [IUserMenu, IToolbarWidgetRegistry],
@@ -87,7 +87,7 @@ export const menuBarPlugin: JupyterFrontEndPlugin<void> = {
  * Jupyter plugin creating a global awareness for RTC.
  */
 export const rtcGlobalAwarenessPlugin: JupyterFrontEndPlugin<IAwareness> = {
-  id: '@jupyter/collaboration-extension:rtcGlobalAwareness',
+  id: 'jupyter-collaboration-codio:rtcGlobalAwareness',
   description: 'Add global awareness to share working document of users.',
   requires: [IStateDB],
   provides: IGlobalAwareness,
@@ -128,7 +128,7 @@ export const rtcGlobalAwarenessPlugin: JupyterFrontEndPlugin<IAwareness> = {
  * Jupyter plugin adding the RTC information to the application left panel if collaborative flag enabled.
  */
 export const rtcPanelPlugin: JupyterFrontEndPlugin<void> = {
-  id: '@jupyter/collaboration-extension:rtcPanel',
+  id: 'jupyter-collaboration-codio:rtcPanel',
   description: 'Add side panel to display all currently connected users.',
   autoStart: true,
   requires: [IGlobalAwareness],
@@ -140,7 +140,7 @@ export const rtcPanelPlugin: JupyterFrontEndPlugin<void> = {
   ): void => {
     const { user } = app.serviceManager;
 
-    const trans = (translator ?? nullTranslator).load('jupyter_collaboration');
+    const trans = (translator ?? nullTranslator).load('jupyter_collaboration_codio');
 
     const userPanel = new SidePanel({
       alignment: 'justify'
@@ -175,7 +175,7 @@ export const rtcPanelPlugin: JupyterFrontEndPlugin<void> = {
 };
 
 export const userEditorCursors: JupyterFrontEndPlugin<void> = {
-  id: '@jupyter/collaboration-extension:userEditorCursors',
+  id: 'jupyter-collaboration-codio:userEditorCursors',
   description:
     'Add CodeMirror extension to display remote user cursors and selections.',
   autoStart: true,

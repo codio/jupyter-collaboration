@@ -1,0 +1,67 @@
+{
+  "projects": {
+    "jupyter-collaborative-drive-codio": {
+      "root": "packages/jupyter-collaborative-drive-codio",
+      "targets": {
+        "build": {
+          "executor": "nx:run-script",
+          "options": {
+            "script": "build"
+          }
+        }
+      }
+    },
+    "docprovider-extension-codio": {
+      "root": "packages/docprovider-extension-codio",
+      "targets": {
+        "build": {
+          "executor": "nx:run-script",
+          "options": {
+            "script": "build"
+          }
+        }
+      }
+    },
+    "docprovider-codio": {
+      "root": "packages/docprovider-codio",
+      "targets": {
+        "build": {
+          "executor": "nx:run-script",
+          "options": {
+            "script": "build"
+          }
+        }
+      }
+    },
+    "jupyter-collaboration-codio": {
+      "root": "packages/jupyter-collaboration-codio",
+      "targets": {
+        "build": {
+          "executor": "nx:run-script",
+          "options": {
+            "script": "build"
+          }
+        }
+      }
+    },
+    "jupyter-collaboration-extension-codio": {
+      "root": "packages/jupyter-collaboration-extension-codio",
+      "targets": {
+        "build": {
+          "executor": "nx:run-script",
+          "options": {
+            "script": "build"
+          }
+        }
+      }
+    }
+  },
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "@nx/workspace/tasks-runner",
+      "options": {
+        "cacheableOperations": ["build", "test", "lint"]
+      }
+    }
+  }
+}
