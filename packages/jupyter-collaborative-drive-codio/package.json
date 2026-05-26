@@ -1,6 +1,6 @@
 {
   "name": "jupyter-collaborative-drive-codio",
-  "version": "4.1.3-rc.1",
+  "version": "4.1.4-rc.0",
   "description": "Codio fork of JupyterLab @jupyter/collaborative-drive - Collaborative Drive",
   "homepage": "https://github.com/codio/jupyter-collaboration",
   "bugs": {
