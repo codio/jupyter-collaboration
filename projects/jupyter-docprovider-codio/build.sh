@@ -17,7 +17,7 @@ jlpm run clean:all
 jlpm
 jlpm run build:prod
 
-cd ../../packages/collaboration-extension
+cd ../../packages/jupyter-collaboration-extension-codio
 pwd
 jlpm run clean:all
 jlpm

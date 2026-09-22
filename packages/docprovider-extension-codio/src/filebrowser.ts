@@ -10,11 +10,11 @@ import {
 import { Dialog, showDialog } from '@jupyterlab/apputils';
 import { DocumentWidget, IDocumentWidget } from '@jupyterlab/docregistry';
 import { Widget } from '@lumino/widgets';
-import { IDocumentManager } from '@jupyterlab/docmanager';
 
 import { IStatusBar } from '@jupyterlab/statusbar';
 import { ContentsManager } from '@jupyterlab/services';
 
+import { IDocumentManager } from '@jupyterlab/docmanager';
 import {
   IEditorTracker,
   IEditorWidgetFactory,
@@ -38,7 +38,8 @@ import {
 import {
   IForkProvider,
   TimelineWidget,
-  RtcContentProvider
+  RtcContentProvider,
+  IDocumentProviderFactory
 } from 'docprovider-codio';
 import { Awareness } from 'y-protocols/awareness';
 import { URLExt } from '@jupyterlab/coreutils';
@@ -52,19 +53,22 @@ const TWO_SESSIONS_WARNING =
   'This is not supported. Please close this view; otherwise, ' +
   'some of your edits may not be saved properly.';
 
+  // TODO: check activate!!!
 export const rtcContentProvider: JupyterFrontEndPlugin<ICollaborativeContentProvider> =
   {
     id: 'docprovider-extension-codio:content-provider',
     description: 'The RTC content provider',
     provides: ICollaborativeContentProvider,
-    requires: [ITranslator],
-    optional: [IGlobalAwareness, ISettingRegistry],
-    activate: async (
+    requires: [ITranslator, IDocumentProviderFactory],
+    optional: [IGlobalAwareness, IDocumentManager],
+    activate: (
       app: JupyterFrontEnd,
       translator: ITranslator,
+      providerFactory: IDocumentProviderFactory,
       globalAwareness: Awareness | null,
-      settingRegistry: ISettingRegistry | null
-    ): Promise<ICollaborativeContentProvider> => {
+      settingRegistry: ISettingRegistry | null,
+      documentManager: IDocumentManager | null
+    ): ICollaborativeContentProvider => {
       const trans = translator.load('jupyter_collaboration_codio');
       const defaultDrive = (app.serviceManager.contents as ContentsManager)
         .defaultDrive;
@@ -79,17 +83,15 @@ export const rtcContentProvider: JupyterFrontEndPlugin<ICollaborativeContentProv
           'Cannot initialize content provider: no content provider registry.'
         );
       }
-      const docmanagerSettings = settingRegistry
-        ? await settingRegistry.load('@jupyterlab/docmanager-extension:plugin')
-        : null;
-
       const rtcContentProvider = new RtcContentProvider({
-        apiEndpoint: '/api/contents',
+        currentDrive: defaultDrive,
         serverSettings: defaultDrive.serverSettings,
         user: app.serviceManager.user,
         trans,
         globalAwareness,
-        docmanagerSettings
+        documentManager,
+        fileChanged: defaultDrive.fileChanged,
+        providerFactory: providerFactory
       });
       registry.register('rtc', rtcContentProvider);
       return rtcContentProvider;
@@ -149,7 +151,7 @@ export const ynotebook: JupyterFrontEndPlugin<void> = {
               'experimentalEnableDocumentWideUndoRedo'
             ).composite as boolean;
 
-            disableDocumentWideUndoRedo = !enableDocWideUndo ?? true;
+            disableDocumentWideUndoRedo = !enableDocWideUndo;
           };
 
           updateSettings(settings);
@@ -238,7 +240,8 @@ export const statusBarTimeline: JupyterFrontEndPlugin<void> = {
           forkProvider.format,
           DOCUMENT_TIMELINE_URL,
           codioProjectState && codioProjectState.complete,
-          docIsReadonly
+          docIsReadonly,
+          app.serviceManager.serverSettings
         );
 
         const elt = document.getElementById('jp-slider-status-bar');

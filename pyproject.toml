@@ -7,7 +7,7 @@ requires = ["hatchling>=1.4.0", "hatch-nodejs-version", "jupyterlab>=4.0.0", "se
 
 [project]
 name = "jupyter-collaboration-monorepo-codio"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 dependencies = [
     # jupyter-server extensions
     "jupyter-server-ydoc-codio @ {root:uri}/projects/jupyter-server-ydoc-codio",
@@ -39,7 +39,11 @@ docs = [
 
 [tool.ruff]
 line-length = 100
-exclude = ["binder"]
+target-version = "py310"
+exclude = [".github", "binder", "*.ipynb"]
+
+[tool.ruff.lint]
+extend-select = ["E", "I", "UP"]
 
 [tool.hatch.version]
 source = "nodejs"
@@ -100,6 +104,8 @@ filterwarnings = [
     "module:make_current is deprecated:DeprecationWarning",
     "module:clear_current is deprecated:DeprecationWarning",
     "module:There is no current event loop:DeprecationWarning",
+    # From pycrdt-store - document_ttl is deprecated in favor of squash_after_inactivity_of
+    "ignore:`document_ttl` is deprecated:DeprecationWarning",
     #
     "module:Jupyter is migrating its paths to use standard platformdirs:DeprecationWarning",
     # In PyPy/Cython: see https://github.com/yaml/pyyaml/issues/688
@@ -110,6 +116,10 @@ filterwarnings = [
     'ignore:Unclosed <MemoryObjectSendStream:ResourceWarning',
     # see https://github.com/python/cpython/issues/126259
     'ignore:unclosed database in <sqlite3.Connection object',
+    # Ignore asyncio.Windows[Proactor|Selector]EventLoopPolicy deprecation warning emitted by jupyter-server
+    "ignore:'asyncio.WindowsProactorEventLoopPolicy' is deprecated:DeprecationWarning",
+    "ignore:'asyncio.WindowsSelectorEventLoopPolicy' is deprecated:DeprecationWarning",
+    "ignore:'asyncio.get_event_loop_policy' is deprecated :DeprecationWarning",
 ]
 
 [tool.mypy]

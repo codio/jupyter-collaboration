@@ -2,7 +2,7 @@
 // Distributed under the terms of the Modified BSD License.
 /**
  * @packageDocumentation
- * @module collaboration-extension
+ * @module jupyter-collaboration-extension-codio
  */
 
 import {
@@ -15,10 +15,8 @@ import {
   IEditorExtensionRegistry
 } from '@jupyterlab/codemirror';
 import { IGlobalAwareness } from '../../jupyter-collaborative-drive-codio/lib';
-import { WebSocketAwarenessProvider } from 'docprovider-codio';
+import { IAwarenessProviderFactory } from 'docprovider-codio';
 import { SidePanel, usersIcon } from '@jupyterlab/ui-components';
-import { URLExt } from '@jupyterlab/coreutils';
-import { ServerConnection } from '@jupyterlab/services';
 import { IStateDB, StateDB } from '@jupyterlab/statedb';
 import { ITranslator, nullTranslator } from '@jupyterlab/translation';
 
@@ -89,23 +87,26 @@ export const menuBarPlugin: JupyterFrontEndPlugin<void> = {
 export const rtcGlobalAwarenessPlugin: JupyterFrontEndPlugin<IAwareness> = {
   id: 'jupyter-collaboration-codio:rtcGlobalAwareness',
   description: 'Add global awareness to share working document of users.',
-  requires: [IStateDB],
+  requires: [IStateDB, IAwarenessProviderFactory],
   provides: IGlobalAwareness,
-  activate: (app: JupyterFrontEnd, state: StateDB): IAwareness => {
+  activate: (
+    app: JupyterFrontEnd,
+    state: StateDB,
+    factory: IAwarenessProviderFactory
+  ): IAwareness => {
     const { user } = app.serviceManager;
 
     const ydoc = new Y.Doc();
     const awareness = new Awareness(ydoc);
 
-    const server = ServerConnection.makeSettings();
-    const url = URLExt.join(server.wsUrl, 'api/collaboration/room');
-
-    new WebSocketAwarenessProvider({
-      url: url,
+    const awarenessOptions = {
       roomID: 'JupyterLab:globalAwareness',
       awareness: awareness,
-      user: user
-    });
+      user: user,
+      serverSettings: app.serviceManager.serverSettings
+    };
+
+    factory.create(awarenessOptions);
 
     state.changed.connect(async () => {
       const data: any = await state.toJSON();
@@ -153,6 +154,7 @@ export const rtcPanelPlugin: JupyterFrontEndPlugin<void> = {
 
     const currentUserPanel = new UserInfoPanel({
       userManager: user,
+      serverSettings: app.serviceManager.serverSettings,
       trans
     });
     currentUserPanel.title.label = trans.__('User info');
