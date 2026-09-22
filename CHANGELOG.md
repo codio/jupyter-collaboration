@@ -10,6 +10,10 @@ No merged PRs
 
 <!-- <END NEW CHANGELOG ENTRY> -->
 
+## 4.4.2
+
+No merged PRs
+
 ## 4.4.1
 
 ([Full Changelog](https://github.com/jupyterlab/jupyter-collaboration/compare/@jupyter/collaboration-extension@4.4.0...02e0af212938cc023e8b53fc31e828d09211ef73))
