@@ -4,11 +4,180 @@ All notable changes to this project will be documented in this file.
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
-## 4.4.2
+## 5.0.4
+
+([Full Changelog](https://github.com/jupyterlab/jupyter-collaboration/compare/@jupyter/collaboration-extension@5.0.3...3a303205e9cbf7e11fd0a1af44f7263296335b40))
+
+### Enhancements made
+
+- Improve Collaborative Cursor UI [#623](https://github.com/jupyterlab/jupyter-collaboration/pull/623) ([@arjxn-py](https://github.com/arjxn-py), [@SylvainCorlay](https://github.com/SylvainCorlay), [@davidbrochart](https://github.com/davidbrochart), [@krassowski](https://github.com/krassowski), [@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+The following people contributed discussions, new ideas, code and documentation contributions, and review.
+See [our definition of contributors](https://github-activity.readthedocs.io/en/latest/use/#how-does-this-tool-define-contributions-in-the-reports).
+
+([GitHub contributors page for this release](https://github.com/jupyterlab/jupyter-collaboration/graphs/contributors?from=2026-09-10&to=2026-09-20&type=c))
+
+@arjxn-py ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3Aarjxn-py+updated%3A2026-09-10..2026-09-20&type=Issues)) | @davidbrochart ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3Adavidbrochart+updated%3A2026-09-10..2026-09-20&type=Issues)) | @krassowski ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3Akrassowski+updated%3A2026-09-10..2026-09-20&type=Issues)) | @martinRenou ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3AmartinRenou+updated%3A2026-09-10..2026-09-20&type=Issues)) | @SylvainCorlay ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3ASylvainCorlay+updated%3A2026-09-10..2026-09-20&type=Issues))
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
+## 5.0.3
+
+([Full Changelog](https://github.com/jupyterlab/jupyter-collaboration/compare/@jupyter/collaboration-extension@5.0.2...32e84aa3363e3dd58b5d5a61a74542e34e967ad9))
+
+### Enhancements made
+
+- Make `errorReason` required to show exact reason to client [#622](https://github.com/jupyterlab/jupyter-collaboration/pull/622) ([@nakul-py](https://github.com/nakul-py), [@davidbrochart](https://github.com/davidbrochart), [@krassowski](https://github.com/krassowski), [@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+The following people contributed discussions, new ideas, code and documentation contributions, and review.
+See [our definition of contributors](https://github-activity.readthedocs.io/en/latest/use/#how-does-this-tool-define-contributions-in-the-reports).
+
+([GitHub contributors page for this release](https://github.com/jupyterlab/jupyter-collaboration/graphs/contributors?from=2026-08-25&to=2026-09-10&type=c))
+
+@davidbrochart ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3Adavidbrochart+updated%3A2026-08-25..2026-09-10&type=Issues)) | @krassowski ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3Akrassowski+updated%3A2026-08-25..2026-09-10&type=Issues)) | @martinRenou ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3AmartinRenou+updated%3A2026-08-25..2026-09-10&type=Issues)) | @nakul-py ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3Anakul-py+updated%3A2026-08-25..2026-09-10&type=Issues))
+
+## 5.0.2
+
+([Full Changelog](https://github.com/jupyterlab/jupyter-collaboration/compare/@jupyter/collaboration-extension@5.0.1...40e29c19bc77af2fafea63e57d1549b299aaf1a5))
+
+### Enhancements made
+
+- Export components from `collaboration` package [#619](https://github.com/jupyterlab/jupyter-collaboration/pull/619) ([@martinRenou](https://github.com/martinRenou), [@davidbrochart](https://github.com/davidbrochart))
+
+### Bugs fixed
+
+- Fix file rename [#618](https://github.com/jupyterlab/jupyter-collaboration/pull/618) ([@davidbrochart](https://github.com/davidbrochart), [@djangoliv](https://github.com/djangoliv))
+
+### Contributors to this release
+
+The following people contributed discussions, new ideas, code and documentation contributions, and review.
+See [our definition of contributors](https://github-activity.readthedocs.io/en/latest/use/#how-does-this-tool-define-contributions-in-the-reports).
+
+([GitHub contributors page for this release](https://github.com/jupyterlab/jupyter-collaboration/graphs/contributors?from=2026-08-24&to=2026-08-25&type=c))
+
+@davidbrochart ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3Adavidbrochart+updated%3A2026-08-24..2026-08-25&type=Issues)) | @djangoliv ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3Adjangoliv+updated%3A2026-08-24..2026-08-25&type=Issues)) | @martinRenou ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3AmartinRenou+updated%3A2026-08-24..2026-08-25&type=Issues))
+
+## 5.0.1
+
+([Full Changelog](https://github.com/jupyterlab/jupyter-collaboration/compare/@jupyter/collaboration-extension@5.0.0...786cc3366e6a579b23e93d0663edc25c0974d2fe))
+
+### Bugs fixed
+
+- Fix file rename [#617](https://github.com/jupyterlab/jupyter-collaboration/pull/617) ([@davidbrochart](https://github.com/davidbrochart), [@krassowski](https://github.com/krassowski))
+
+### Contributors to this release
+
+The following people contributed discussions, new ideas, code and documentation contributions, and review.
+See [our definition of contributors](https://github-activity.readthedocs.io/en/latest/use/#how-does-this-tool-define-contributions-in-the-reports).
+
+([GitHub contributors page for this release](https://github.com/jupyterlab/jupyter-collaboration/graphs/contributors?from=2026-08-03&to=2026-08-24&type=c))
+
+@davidbrochart ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3Adavidbrochart+updated%3A2026-08-03..2026-08-24&type=Issues)) | @krassowski ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3Akrassowski+updated%3A2026-08-03..2026-08-24&type=Issues))
+
+## 5.0.0
+
+([Full Changelog](https://github.com/jupyterlab/jupyter-collaboration/compare/@jupyter/collaboration-extension@4.4.0...11e5ef437e01c12c493735efb894dc4ac01c27c2))
+
+### Enhancements made
+
+- Use jupyter-ydoc's `aset_progressively` [#607](https://github.com/jupyterlab/jupyter-collaboration/pull/607) ([@davidbrochart](https://github.com/davidbrochart), [@MUFFANUJ](https://github.com/MUFFANUJ), [@krassowski](https://github.com/krassowski))
+- Show dialog when document initialization times out [#596](https://github.com/jupyterlab/jupyter-collaboration/pull/596) ([@davidbrochart](https://github.com/davidbrochart), [@krassowski](https://github.com/krassowski))
+- Add a "Show diff" option when an unresolvable conflict is detected on out of band change [#589](https://github.com/jupyterlab/jupyter-collaboration/pull/589) ([@krassowski](https://github.com/krassowski), [@davidbrochart](https://github.com/davidbrochart), [@jtpio](https://github.com/jtpio), [@martinRenou](https://github.com/martinRenou), [@trungleduc](https://github.com/trungleduc))
+- Reduce noisy monitor logs [#588](https://github.com/jupyterlab/jupyter-collaboration/pull/588) ([@Darshan808](https://github.com/Darshan808), [@davidbrochart](https://github.com/davidbrochart), [@krassowski](https://github.com/krassowski))
+- Configurable `session_store_path` [#586](https://github.com/jupyterlab/jupyter-collaboration/pull/586) ([@jtpio](https://github.com/jtpio), [@Darshan808](https://github.com/Darshan808), [@davidbrochart](https://github.com/davidbrochart))
+
+### Bugs fixed
+
+- Start serving WebSocket after document initialization [#603](https://github.com/jupyterlab/jupyter-collaboration/pull/603) ([@davidbrochart](https://github.com/davidbrochart), [@krassowski](https://github.com/krassowski))
+- Do not crash on out of band change when room is disconnected and ystore deleted (or no-op) [#584](https://github.com/jupyterlab/jupyter-collaboration/pull/584) ([@krassowski](https://github.com/krassowski), [@davidbrochart](https://github.com/davidbrochart))
+
+### Maintenance and upkeep improvements
+
+- Fix mypy [#614](https://github.com/jupyterlab/jupyter-collaboration/pull/614) ([@krassowski](https://github.com/krassowski), [@davidbrochart](https://github.com/davidbrochart))
+- Upgrade jupyter-builder to v1.2.0 [#613](https://github.com/jupyterlab/jupyter-collaboration/pull/613) ([@krassowski](https://github.com/krassowski), [@jtpio](https://github.com/jtpio))
+- ci: drop the `|| <cmd> --lf` test retry [#612](https://github.com/jupyterlab/jupyter-collaboration/pull/612) ([@Carreau](https://github.com/Carreau), [@krassowski](https://github.com/krassowski))
+- Switch pre-commit to `language: system` [#609](https://github.com/jupyterlab/jupyter-collaboration/pull/609) ([@jtpio](https://github.com/jtpio), [@krassowski](https://github.com/krassowski))
+- Upgrade jupyter-ydoc v4.0.0 & jupyterlab v4.6.0, use jupyter-builder [#606](https://github.com/jupyterlab/jupyter-collaboration/pull/606) ([@davidbrochart](https://github.com/davidbrochart), [@krassowski](https://github.com/krassowski))
+- Migrate ESLint to v9 + adopt `@jupyter/eslint-plugin` [#602](https://github.com/jupyterlab/jupyter-collaboration/pull/602) ([@Darshan808](https://github.com/Darshan808), [@krassowski](https://github.com/krassowski))
+- Use jupyter-ydoc v4 [#587](https://github.com/jupyterlab/jupyter-collaboration/pull/587) ([@davidbrochart](https://github.com/davidbrochart), [@krassowski](https://github.com/krassowski))
+
+### Contributors to this release
+
+The following people contributed discussions, new ideas, code and documentation contributions, and review.
+See [our definition of contributors](https://github-activity.readthedocs.io/en/latest/use/#how-does-this-tool-define-contributions-in-the-reports).
+
+([GitHub contributors page for this release](https://github.com/jupyterlab/jupyter-collaboration/graphs/contributors?from=2026-05-11&to=2026-08-03&type=c))
+
+@Carreau ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3ACarreau+updated%3A2026-05-11..2026-08-03&type=Issues)) | @Darshan808 ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3ADarshan808+updated%3A2026-05-11..2026-08-03&type=Issues)) | @davidbrochart ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3Adavidbrochart+updated%3A2026-05-11..2026-08-03&type=Issues)) | @jtpio ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3Ajtpio+updated%3A2026-05-11..2026-08-03&type=Issues)) | @krassowski ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3Akrassowski+updated%3A2026-05-11..2026-08-03&type=Issues)) | @martinRenou ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3AmartinRenou+updated%3A2026-05-11..2026-08-03&type=Issues)) | @MUFFANUJ ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3AMUFFANUJ+updated%3A2026-05-11..2026-08-03&type=Issues)) | @trungleduc ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3Atrungleduc+updated%3A2026-05-11..2026-08-03&type=Issues))
+
+## 5.0.0rc0
 
 No merged PRs
 
-<!-- <END NEW CHANGELOG ENTRY> -->
+## 5.0.0beta0
+
+([Full Changelog](https://github.com/jupyterlab/jupyter-collaboration/compare/@jupyter/collaboration-extension@5.0.0-alpha.0...ad9d03acd5cab71fce68a8f8479cdc99028a579b))
+
+### Enhancements made
+
+- Use jupyter-ydoc's `aset_progressively` [#607](https://github.com/jupyterlab/jupyter-collaboration/pull/607) ([@davidbrochart](https://github.com/davidbrochart), [@MUFFANUJ](https://github.com/MUFFANUJ), [@krassowski](https://github.com/krassowski))
+- Show dialog when document initialization times out [#596](https://github.com/jupyterlab/jupyter-collaboration/pull/596) ([@davidbrochart](https://github.com/davidbrochart), [@krassowski](https://github.com/krassowski))
+- Add a "Show diff" option when an unresolvable conflict is detected on out of band change [#589](https://github.com/jupyterlab/jupyter-collaboration/pull/589) ([@krassowski](https://github.com/krassowski), [@davidbrochart](https://github.com/davidbrochart), [@jtpio](https://github.com/jtpio), [@martinRenou](https://github.com/martinRenou), [@trungleduc](https://github.com/trungleduc))
+
+### Bugs fixed
+
+- Start serving WebSocket after document initialization [#603](https://github.com/jupyterlab/jupyter-collaboration/pull/603) ([@davidbrochart](https://github.com/davidbrochart), [@krassowski](https://github.com/krassowski))
+
+### Maintenance and upkeep improvements
+
+- Upgrade jupyter-builder to v1.2.0 [#613](https://github.com/jupyterlab/jupyter-collaboration/pull/613) ([@krassowski](https://github.com/krassowski), [@jtpio](https://github.com/jtpio))
+- ci: drop the `|| <cmd> --lf` test retry [#612](https://github.com/jupyterlab/jupyter-collaboration/pull/612) ([@Carreau](https://github.com/Carreau), [@krassowski](https://github.com/krassowski))
+- Switch pre-commit to `language: system` [#609](https://github.com/jupyterlab/jupyter-collaboration/pull/609) ([@jtpio](https://github.com/jtpio), [@krassowski](https://github.com/krassowski))
+- Upgrade jupyter-ydoc v4.0.0 & jupyterlab v4.6.0, use jupyter-builder [#606](https://github.com/jupyterlab/jupyter-collaboration/pull/606) ([@davidbrochart](https://github.com/davidbrochart), [@krassowski](https://github.com/krassowski))
+- Migrate ESLint to v9 + adopt `@jupyter/eslint-plugin` [#602](https://github.com/jupyterlab/jupyter-collaboration/pull/602) ([@Darshan808](https://github.com/Darshan808), [@krassowski](https://github.com/krassowski))
+
+### Contributors to this release
+
+The following people contributed discussions, new ideas, code and documentation contributions, and review.
+See [our definition of contributors](https://github-activity.readthedocs.io/en/latest/use/#how-does-this-tool-define-contributions-in-the-reports).
+
+([GitHub contributors page for this release](https://github.com/jupyterlab/jupyter-collaboration/graphs/contributors?from=2026-06-09&to=2026-07-31&type=c))
+
+@Carreau ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3ACarreau+updated%3A2026-06-09..2026-07-31&type=Issues)) | @Darshan808 ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3ADarshan808+updated%3A2026-06-09..2026-07-31&type=Issues)) | @davidbrochart ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3Adavidbrochart+updated%3A2026-06-09..2026-07-31&type=Issues)) | @jtpio ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3Ajtpio+updated%3A2026-06-09..2026-07-31&type=Issues)) | @krassowski ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3Akrassowski+updated%3A2026-06-09..2026-07-31&type=Issues)) | @martinRenou ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3AmartinRenou+updated%3A2026-06-09..2026-07-31&type=Issues)) | @MUFFANUJ ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3AMUFFANUJ+updated%3A2026-06-09..2026-07-31&type=Issues)) | @trungleduc ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3Atrungleduc+updated%3A2026-06-09..2026-07-31&type=Issues))
+
+## 5.0.0alpha0
+
+([Full Changelog](https://github.com/jupyterlab/jupyter-collaboration/compare/@jupyter/collaboration-extension@4.4.0...48fd7405d3e3cb74bbd4d7579eab7bcb4cc7e284))
+
+### Enhancements made
+
+- Reduce noisy monitor logs [#588](https://github.com/jupyterlab/jupyter-collaboration/pull/588) ([@Darshan808](https://github.com/Darshan808), [@davidbrochart](https://github.com/davidbrochart), [@krassowski](https://github.com/krassowski))
+- Configurable `session_store_path` [#586](https://github.com/jupyterlab/jupyter-collaboration/pull/586) ([@jtpio](https://github.com/jtpio), [@Darshan808](https://github.com/Darshan808), [@davidbrochart](https://github.com/davidbrochart))
+
+### Bugs fixed
+
+- Do not crash on out of band change when room is disconnected and ystore deleted (or no-op) [#584](https://github.com/jupyterlab/jupyter-collaboration/pull/584) ([@krassowski](https://github.com/krassowski), [@davidbrochart](https://github.com/davidbrochart))
+
+### Maintenance and upkeep improvements
+
+- Use jupyter-ydoc v4 [#587](https://github.com/jupyterlab/jupyter-collaboration/pull/587) ([@davidbrochart](https://github.com/davidbrochart), [@krassowski](https://github.com/krassowski))
+
+### Contributors to this release
+
+The following people contributed discussions, new ideas, code and documentation contributions, and review.
+See [our definition of contributors](https://github-activity.readthedocs.io/en/latest/use/#how-does-this-tool-define-contributions-in-the-reports).
+
+([GitHub contributors page for this release](https://github.com/jupyterlab/jupyter-collaboration/graphs/contributors?from=2026-05-11&to=2026-06-09&type=c))
+
+@Darshan808 ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3ADarshan808+updated%3A2026-05-11..2026-06-09&type=Issues)) | @davidbrochart ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3Adavidbrochart+updated%3A2026-05-11..2026-06-09&type=Issues)) | @jtpio ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3Ajtpio+updated%3A2026-05-11..2026-06-09&type=Issues)) | @krassowski ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3Akrassowski+updated%3A2026-05-11..2026-06-09&type=Issues)) | @trungleduc ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3Atrungleduc+updated%3A2026-05-11..2026-06-09&type=Issues))
+
+## 4.4.2
+
+No merged PRs
 
 ## 4.4.1
 
@@ -22,14 +191,6 @@ No merged PRs
 
 - Fix UI tests workflow on `4.4.x` branch [#592](https://github.com/jupyterlab/jupyter-collaboration/pull/592) ([@krassowski](https://github.com/krassowski))
 
-### Contributors to this release
-
-The following people contributed discussions, new ideas, code and documentation contributions, and review.
-See [our definition of contributors](https://github-activity.readthedocs.io/en/latest/use/#how-does-this-tool-define-contributions-in-the-reports).
-
-([GitHub contributors page for this release](https://github.com/jupyterlab/jupyter-collaboration/graphs/contributors?from=2026-05-11&to=2026-06-04&type=c))
-
-@davidbrochart ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3Adavidbrochart+updated%3A2026-05-11..2026-06-04&type=Issues)) | @krassowski ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3Akrassowski+updated%3A2026-05-11..2026-06-04&type=Issues))
 
 ## 4.4.0
 
