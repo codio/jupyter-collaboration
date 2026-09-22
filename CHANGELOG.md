@@ -23,6 +23,23 @@ See [our definition of contributors](https://github-activity.readthedocs.io/en/l
 
 <!-- <END NEW CHANGELOG ENTRY> -->
 
+## 5.0.4
+
+([Full Changelog](https://github.com/jupyterlab/jupyter-collaboration/compare/@jupyter/collaboration-extension@5.0.3...3a303205e9cbf7e11fd0a1af44f7263296335b40))
+
+### Enhancements made
+
+- Improve Collaborative Cursor UI [#623](https://github.com/jupyterlab/jupyter-collaboration/pull/623) ([@arjxn-py](https://github.com/arjxn-py), [@SylvainCorlay](https://github.com/SylvainCorlay), [@davidbrochart](https://github.com/davidbrochart), [@krassowski](https://github.com/krassowski), [@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+The following people contributed discussions, new ideas, code and documentation contributions, and review.
+See [our definition of contributors](https://github-activity.readthedocs.io/en/latest/use/#how-does-this-tool-define-contributions-in-the-reports).
+
+([GitHub contributors page for this release](https://github.com/jupyterlab/jupyter-collaboration/graphs/contributors?from=2026-09-10&to=2026-09-20&type=c))
+
+@arjxn-py ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3Aarjxn-py+updated%3A2026-09-10..2026-09-20&type=Issues)) | @davidbrochart ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3Adavidbrochart+updated%3A2026-09-10..2026-09-20&type=Issues)) | @krassowski ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3Akrassowski+updated%3A2026-09-10..2026-09-20&type=Issues)) | @martinRenou ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3AmartinRenou+updated%3A2026-09-10..2026-09-20&type=Issues)) | @SylvainCorlay ([activity](https://github.com/search?q=repo%3Ajupyterlab%2Fjupyter-collaboration+involves%3ASylvainCorlay+updated%3A2026-09-10..2026-09-20&type=Issues))
+
 ## 5.0.3
 
 ([Full Changelog](https://github.com/jupyterlab/jupyter-collaboration/compare/@jupyter/collaboration-extension@5.0.2...32e84aa3363e3dd58b5d5a61a74542e34e967ad9))
@@ -190,7 +207,6 @@ No merged PRs
 ### Maintenance and upkeep improvements
 
 - Fix UI tests workflow on `4.4.x` branch [#592](https://github.com/jupyterlab/jupyter-collaboration/pull/592) ([@krassowski](https://github.com/krassowski))
-
 
 ## 4.4.0
 
