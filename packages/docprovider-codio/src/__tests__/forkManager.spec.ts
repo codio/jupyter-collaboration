@@ -1,7 +1,7 @@
 // Copyright (c) Jupyter Development Team.
 // Distributed under the terms of the Modified BSD License.
 
-import { ICollaborativeContentProvider } from '@jupyter/collaborative-drive';
+import { ICollaborativeContentProvider } from '../../../jupyter-collaborative-drive-codio/lib';
 import {
   ForkManager,
   JUPYTER_COLLABORATION_FORK_EVENTS_URI

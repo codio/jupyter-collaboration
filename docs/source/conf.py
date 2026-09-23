@@ -16,7 +16,7 @@ HERE = Path(__file__).parent.resolve()
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = "jupyter_collaboration"
+project = "jupyter_collaboration_codio"
 copyright = f"2022-{time.localtime().tm_year}, Jupyter Development Team"  # noqa
 author = "Jupyter Development Team"
 release = "0.3.0"

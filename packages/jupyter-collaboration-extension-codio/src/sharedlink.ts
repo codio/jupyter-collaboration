@@ -9,7 +9,7 @@ import { Clipboard, ICommandPalette } from '@jupyterlab/apputils';
 import { ITranslator, nullTranslator } from '@jupyterlab/translation';
 import { shareIcon } from '@jupyterlab/ui-components';
 
-import { showSharedLinkDialog } from '@jupyter/collaboration';
+import { showSharedLinkDialog } from 'jupyter-collaboration-codio';
 
 /**
  * The command IDs used by the plugin.
@@ -22,7 +22,7 @@ namespace CommandIDs {
  * Plugin to share the URL of the running Jupyter Server
  */
 export const sharedLink: JupyterFrontEndPlugin<void> = {
-  id: '@jupyter/collaboration-extension:shared-link',
+  id: 'jupyter-collaboration-codio:shared-link',
   autoStart: true,
   optional: [ICommandPalette, ITranslator],
   activate: async (
@@ -31,7 +31,7 @@ export const sharedLink: JupyterFrontEndPlugin<void> = {
     translator: ITranslator | null
   ) => {
     const { commands } = app;
-    const trans = (translator ?? nullTranslator).load('jupyter_collaboration');
+    const trans = (translator ?? nullTranslator).load('jupyter_collaboration_codio');
 
     commands.addCommand(CommandIDs.share, {
       label: trans.__('Generate a Shared Link'),

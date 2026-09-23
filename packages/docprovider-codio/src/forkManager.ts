@@ -3,7 +3,7 @@
  * Distributed under the terms of the Modified BSD License.
  */
 
-import { ICollaborativeContentProvider } from '@jupyter/collaborative-drive';
+import { ICollaborativeContentProvider } from '../../jupyter-collaborative-drive-codio/lib';
 import { URLExt } from '@jupyterlab/coreutils';
 import { Event } from '@jupyterlab/services';
 import { ISignal, Signal } from '@lumino/signaling';

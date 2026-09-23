@@ -1,7 +1,7 @@
 {
-  "name": "@jupyter/collaboration",
-  "version": "4.1.1",
-  "description": "Codio fork of JupyterLab - Real-Time Collaboration Widgets",
+  "name": "jupyter-collaboration-codio",
+  "version": "4.1.4-rc.0",
+  "description": "Codio fork of JupyterLab @jupyter/collaboration - Real-Time Collaboration Widgets",
   "homepage": "https://github.com/codio/jupyter-collaboration",
   "bugs": {
     "url": "https://github.com/codio/jupyter-collaboration/issues"
@@ -60,11 +60,13 @@
     "rimraf": "^4.1.2",
     "typescript": "~5.1.6"
   },
-  "private": true,
+  "publishConfig": {
+    "access": "public"
+  },
   "typedoc": {
     "entryPoint": "./src/index.ts",
     "readmeFile": "./README.md",
-    "displayName": "@jupyter/collaboration",
+    "displayName": "jupyter-collaboration-codio",
     "tsconfig": "./tsconfig.json"
   },
   "styleModule": "style/index.js"

@@ -14,6 +14,7 @@ tests
 .eslintrc.js
 jupyter-config
 jupyter_collaboration
+jupyter_collaboration_codio
 
 packages/collaboration/babel.config.js
 packages/docprovider/babel.config.js

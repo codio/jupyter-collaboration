@@ -65,7 +65,7 @@ path = "jupyter_server_ydoc_codio/_version.py"
 exclude = ["/.github", "/binder", "node_modules"]
 
 [tool.hatch.build.targets.wheel.shared-data]
-"jupyter-config/jupyter_server_ydoc_codio.json" = "etc/jupyter/jupyter_server_config.d/jupyter_collaboration.json"
+"jupyter-config/jupyter_server_ydoc_codio.json" = "etc/jupyter/jupyter_server_config.d/jupyter_collaboration_codio.json"
 
 [tool.hatch.build.targets.sdist.force-include]
 "../../tests" = "tests"
