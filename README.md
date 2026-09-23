@@ -15,18 +15,18 @@ To install the latest release locally, make sure you have
 [pip installed](https://pip.readthedocs.io/en/stable/installing/) and run:
 
 ```bash
-pip install jupyter-collaboration
+pip install jupyter-collaboration-codio
 ```
 
 Or using ``conda``/``mamba``:
 
 ```bash
-conda install -c conda-forge jupyter-collaboration
+conda install -c conda-forge jupyter-collaboration-codio
 ```
 
 ### Testing
 
-See [CONTRIBUTING](./docs/source/developer/contributing.rst#running-tests).
+See [CONTRIBUTING](./docs/source/developer/contributing.md#running-tests).
 
 ## Contributing
 

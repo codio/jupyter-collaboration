@@ -9,19 +9,19 @@ requires = ["hatchling>=1.4.0"]
 name = "jupyter-server-ydoc-codio"
 readme = "README.md"
 license = { file = "LICENSE" }
-requires-python = ">=3.8"
-description = "fork of jupyter-server extension integrating collaborative shared models."
+requires-python = ">=3.10"
+description = "jupyter-server extension integrating collaborative shared models."
 classifiers = [
     "Intended Audience :: Developers",
     "Intended Audience :: System Administrators",
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: BSD License",
     "Programming Language :: Python",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Framework :: Jupyter"
 ]
 authors = [
@@ -29,9 +29,9 @@ authors = [
 ]
 dependencies = [
     "jupyter_server>=2.15.0,<3.0.0",
-    "jupyter_ydoc>=3.0.3,<4.0.0",
+    "jupyter_ydoc>=3.5.0,<4.0.0",
     "pycrdt",
-    "pycrdt-websocket>=0.16.0,<0.17.0",
+    "pycrdt-websocket>=0.16.2,<0.17.0",
     "jupyter_events>=0.11.0",
     "jupyter_server_fileid>=0.7.0,<1",
     "jsonschema>=4.18.0"
@@ -54,8 +54,7 @@ test = [
     "pytest>=7.0",
     "pytest-cov",
     "anyio",
-    "httpx-ws >=0.5.2",
-    "importlib_metadata >=4.8.3; python_version<'3.10'",
+    "httpx-ws >=0.9.0",
 ]
 
 [tool.hatch.version]
@@ -65,7 +64,7 @@ path = "jupyter_server_ydoc_codio/_version.py"
 exclude = ["/.github", "/binder", "node_modules"]
 
 [tool.hatch.build.targets.wheel.shared-data]
-"jupyter-config/jupyter_server_ydoc_codio.json" = "etc/jupyter/jupyter_server_config.d/jupyter_collaboration.json"
+"jupyter-config/jupyter_server_ydoc_codio.json" = "etc/jupyter/jupyter_server_config.d/jupyter_collaboration_codio.json"
 
 [tool.hatch.build.targets.sdist.force-include]
 "../../tests" = "tests"

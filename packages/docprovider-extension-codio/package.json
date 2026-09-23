@@ -1,6 +1,6 @@
 {
   "name": "docprovider-extension-codio",
-  "version": "4.1.1",
+  "version": "4.4.6-rc.1",
   "description": "Codio fork of JupyterLab - Collaborative Shared Models",
   "keywords": [
     "jupyter",
@@ -53,31 +53,34 @@
     "watch:labextension": "jupyter labextension watch ."
   },
   "dependencies": {
-    "@jupyter/collaborative-drive": "^4.1.1",
     "@jupyter/ydoc": "^2.1.3 || ^3.0.0",
-    "@jupyterlab/application": "^4.4.0",
-    "@jupyterlab/apputils": "^4.4.0",
-    "@jupyterlab/docregistry": "^4.4.0",
-    "@jupyterlab/filebrowser": "^4.4.0",
-    "@jupyterlab/fileeditor": "^4.4.0",
-    "@jupyterlab/logconsole": "^4.4.0",
-    "@jupyterlab/notebook": "^4.4.0",
-    "@jupyterlab/settingregistry": "^4.4.0",
-    "@jupyterlab/translation": "^4.4.0",
+    "@jupyterlab/application": "^4.5.0",
+    "@jupyterlab/apputils": "^4.5.0",
+    "@jupyterlab/docmanager": "^4.5.0",
+    "@jupyterlab/docregistry": "^4.5.0",
+    "@jupyterlab/filebrowser": "^4.5.0",
+    "@jupyterlab/fileeditor": "^4.5.0",
+    "@jupyterlab/logconsole": "^4.5.0",
+    "@jupyterlab/notebook": "^4.5.0",
+    "@jupyterlab/settingregistry": "^4.5.0",
+    "@jupyterlab/translation": "^4.5.0",
     "@lumino/commands": "^2.3.2",
-    "docprovider-codio": "../docprovider-codio",
+    "docprovider-codio": "^4.4.6-rc.1",
+    "jupyter-collaborative-drive-codio": "^4.4.6-rc.1",
     "y-protocols": "^1.0.5",
     "y-websocket": "^1.3.15",
     "yjs": "^13.5.40"
   },
   "devDependencies": {
-    "@jupyterlab/builder": "^4.4.0",
+    "@jupyterlab/builder": "^4.5.0",
     "@types/react": "~18.3.1",
     "npm-run-all": "^4.1.5",
     "rimraf": "^4.1.2",
-    "typescript": "~5.1.6"
+    "typescript": "~5.9.3"
   },
-  "private": true,
+  "publishConfig": {
+    "access": "public"
+  },
   "typedoc": {
     "entryPoint": "./src/index.ts",
     "readmeFile": "./README.md",
@@ -100,11 +103,11 @@
         "bundled": false,
         "singleton": true
       },
-      "@jupyter/collaboration": {
+      "jupyter-collaboration-codio": {
         "bundled": false,
         "singleton": true
       },
-      "@jupyter/collaborative-drive": {
+      "jupyter-collaborative-drive-codio": {
         "bundled": true,
         "singleton": true
       },

@@ -1,23 +1,38 @@
-/* -----------------------------------------------------------------------------
-| Copyright (c) Jupyter Development Team.
-| Distributed under the terms of the Modified BSD License.
-|----------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Jupyter Development Team.
+ * Distributed under the terms of the Modified BSD License.
+ */
 
-import { IDocumentProvider } from '@jupyter/collaborative-drive';
-import { showErrorMessage, Dialog } from '@jupyterlab/apputils';
-import { User } from '@jupyterlab/services';
-import { TranslationBundle } from '@jupyterlab/translation';
+import { WebsocketProvider as YWebsocketProvider } from 'y-websocket';
+import { Awareness } from 'y-protocols/awareness';
 
-import { PromiseDelegate } from '@lumino/coreutils';
+import * as decoding from 'lib0/decoding';
+import * as encoding from 'lib0/encoding';
+
 import { Signal } from '@lumino/signaling';
+import { PromiseDelegate } from '@lumino/coreutils';
 
 import { DocumentChange, YDocument } from '@jupyter/ydoc';
+import { IDocumentProvider } from '../../jupyter-collaborative-drive-codio/lib';
 
-import { Awareness } from 'y-protocols/awareness';
-import { WebsocketProvider as YWebsocketProvider } from 'y-websocket';
+import { ServerConnection, User } from '@jupyterlab/services';
+import { URLExt } from '@jupyterlab/coreutils';
+import { TranslationBundle } from '@jupyterlab/translation';
+import { Dialog, showDialog } from '@jupyterlab/apputils';
 
-import { requestDocSession } from './requests';
 import { IForkProvider } from './ydrive';
+import { requestDocSession } from './requests';
+import { ISessionClosePayload } from './tokens';
+
+/**
+ * The url for the default drive service.
+ */
+const DOCUMENT_PROVIDER_URL = 'api/collaboration/room';
+
+/**
+ * The raw message type.
+ */
+const RAW_MESSAGE_TYPE = 2;
 
 /**
  * A class to provide Yjs synchronization over WebSocket.
@@ -25,7 +40,6 @@ import { IForkProvider } from './ydrive';
  * We specify custom messages that the server can interpret. For reference please look in yjs_ws_server.
  *
  */
-
 export class WebSocketProvider implements IDocumentProvider, IForkProvider {
   /**
    * Construct a new WebSocketProvider
@@ -37,11 +51,15 @@ export class WebSocketProvider implements IDocumentProvider, IForkProvider {
     this._path = options.path;
     this._contentType = options.contentType;
     this._format = options.format;
-    this._serverUrl = options.url;
+    this._customServerUrl = options.url;
     this._sharedModel = options.model;
     this._awareness = options.model.awareness;
     this._yWebsocketProvider = null;
+    this._serverSettings =
+      options.serverSettings ?? ServerConnection.makeSettings();
     this._trans = options.translator;
+    this._onConflictSaveAs = options.onConflictSaveAs;
+    this._onConflictRevert = options.onConflictRevert;
 
     const user = options.user;
 
@@ -83,6 +101,13 @@ export class WebSocketProvider implements IDocumentProvider, IForkProvider {
       return;
     }
     this._isDisposed = true;
+    if (this._conflictWs) {
+      this._conflictWs.removeEventListener(
+        'message',
+        this._handleConflictMessage
+      );
+      this._conflictWs = null;
+    }
     this._yWebsocketProvider?.off('connection-close', this._onConnectionClosed);
     this._yWebsocketProvider?.off('sync', this._onSync);
     this._yWebsocketProvider?.destroy();
@@ -95,12 +120,83 @@ export class WebSocketProvider implements IDocumentProvider, IForkProvider {
     this._connect();
   }
 
+  async save(): Promise<void> {
+    const ws = this._yWebsocketProvider?.ws;
+    if (ws) {
+      const saveId = ++this._saveCounter;
+      const delegate = new PromiseDelegate<void>();
+      const handler = (event: MessageEvent) => {
+        const data = new Uint8Array(event.data);
+        const decoder = decoding.createDecoder(data);
+        try {
+          const messageType = decoding.readVarUint(decoder);
+          if (messageType !== RAW_MESSAGE_TYPE) {
+            return;
+          }
+        } catch {
+          return;
+        }
+        const rawReply = decoding.readVarString(decoder);
+        let reply: {
+          type: 'save';
+          responseTo: number;
+          status: 'success' | 'skipped' | 'failed';
+        } | null = null;
+        try {
+          reply = JSON.parse(rawReply);
+        } catch (e) {
+          console.debug('The raw reply received was not a JSON reply');
+        }
+        if (
+          reply &&
+          reply['type'] === 'save' &&
+          reply['responseTo'] === saveId
+        ) {
+          if (reply.status === 'success') {
+            delegate.resolve();
+          } else if (reply.status === 'failed') {
+            delegate.reject('Saving failed');
+          } else if (reply.status === 'skipped') {
+            delegate.reject('Saving already in progress');
+          } else {
+            delegate.reject('Unrecognised save reply status');
+          }
+        }
+      };
+      ws.addEventListener('message', handler);
+      const encoder = encoding.createEncoder();
+      encoding.writeVarUint(encoder, RAW_MESSAGE_TYPE);
+      encoding.writeVarString(encoder, 'save');
+      encoding.writeVarUint(encoder, saveId);
+      const saveMessage = encoding.toUint8Array(encoder);
+      ws.send(saveMessage);
+      try {
+        await delegate.promise;
+      } finally {
+        ws.removeEventListener('message', handler);
+      }
+    }
+  }
+
+  private get _serverUrl() {
+    return (
+      this._customServerUrl ??
+      URLExt.join(this._serverSettings.wsUrl, DOCUMENT_PROVIDER_URL)
+    );
+  }
+
   private async _connect(): Promise<void> {
     const session = await requestDocSession(
       this._format,
       this._contentType,
-      this._path
+      this._path,
+      this._serverSettings
     );
+    const token = this._serverSettings.token;
+    const params: Record<string, string> = { sessionId: session.sessionId };
+    if (this._serverSettings.appendToken && token !== '') {
+      params['token'] = token;
+    }
 
     this._yWebsocketProvider = new YWebsocketProvider(
       this._serverUrl,
@@ -108,16 +204,27 @@ export class WebSocketProvider implements IDocumentProvider, IForkProvider {
       this._sharedModel.ydoc,
       {
         disableBc: true,
-        params: { sessionId: session.sessionId },
-        awareness: this._awareness
+        params,
+        awareness: this._awareness,
+        WebSocketPolyfill: this._serverSettings.WebSocket
       }
     );
 
     this._yWebsocketProvider.on('sync', this._onSync);
     this._yWebsocketProvider.on('connection-close', this._onConnectionClosed);
+    this._yWebsocketProvider.on('status', ({ status }: { status: string }) => {
+      if (status === 'connected') {
+        this._attachConflictListener();
+      }
+    });
   }
 
   async connectToForkDoc(forkRoomId: string, sessionId: string): Promise<void> {
+    const token = this._serverSettings.token;
+    const params: Record<string, string> = { sessionId };
+    if (this._serverSettings.appendToken && token !== '') {
+      params['token'] = token;
+    }
     this._disconnect();
     this._yWebsocketProvider = new YWebsocketProvider(
       this._serverUrl,
@@ -125,8 +232,9 @@ export class WebSocketProvider implements IDocumentProvider, IForkProvider {
       this._sharedModel.ydoc,
       {
         disableBc: true,
-        params: { sessionId },
-        awareness: this._awareness
+        params,
+        awareness: this._awareness,
+        WebSocketPolyfill: this._serverSettings.WebSocket
       }
     );
   }
@@ -145,22 +253,163 @@ export class WebSocketProvider implements IDocumentProvider, IForkProvider {
     this._awareness.setLocalStateField('user', user.identity);
   }
 
-  private _onConnectionClosed = (event: any): void => {
+  private _buildSessionExpiredMessage(
+    payload: ISessionClosePayload,
+    trans: TranslationBundle
+  ): { title: string; body: string } {
+    switch (payload.reason) {
+      case 'version_mismatch':
+        return {
+          title: trans.__('Collaboration extension updated'),
+          body: trans.__('Reload the browser tab to load the new version.')
+        };
+      case 'initialization_error':
+        return {
+          title: trans.__('Document error'),
+          body: trans.__(
+            'Failed to initialize the document. Close this tab and reopen the file.'
+          )
+        };
+      case 'unknown_session':
+      default:
+        return {
+          title: trans.__('Session expired'),
+          body: payload.errorReason
+            ? trans.__(payload.errorReason)
+            : trans.__('Reload the browser tab to continue.')
+        };
+    }
+  }
+
+  private _onConnectionClosed = async (event: CloseEvent): Promise<void> => {
+    if ([4400, 4404, 4500].includes(event.code)) {
+      if (!this._hasSynced) {
+        // Rejecting the ready promise will close the file placeholder widget.
+        const reason = this._getCloseReasonMessage(
+          event.code as 4400 | 4404 | 4500
+        );
+        this._ready.reject(reason);
+        // Disposing model prevents repeated websocket reconnection attempts.
+        // Rejecting the ready promise will ultimately close the file,
+        // but the document manager takes some time to do so.
+        this._sharedModel.dispose();
+      }
+    }
     if (event.code === 1003) {
       console.error('Document provider closed:', event.reason);
 
-      showErrorMessage(this._trans.__('Document session error'), event.reason, [
-        Dialog.okButton()
-      ]);
+      let payload: ISessionClosePayload;
+      try {
+        payload = JSON.parse(event.reason) as ISessionClosePayload;
+      } catch {
+        payload = {
+          reason: 'unknown_session',
+          sessionId: '',
+          reloadable: false,
+          errorReason: event.reason
+        };
+      }
 
+      const { title, body } = this._buildSessionExpiredMessage(
+        payload,
+        this._trans
+      );
+
+      const result = await showDialog({
+        title,
+        body,
+        buttons: payload.reloadable
+          ? [
+              Dialog.cancelButton({ label: this._trans.__('Continue') }),
+              Dialog.okButton({ label: this._trans.__('Reload') })
+            ]
+          : [Dialog.okButton({ label: this._trans.__('Ok') })]
+      });
+
+      if (result.button.accept && payload.reloadable) {
+        window.location.reload();
+      }
       // Dispose shared model immediately. Better break the document model,
       // than overriding data on disk.
       this._sharedModel.dispose();
     }
   };
 
+  private _attachConflictListener(): void {
+    if (this._conflictWs) {
+      this._conflictWs.removeEventListener(
+        'message',
+        this._handleConflictMessage
+      );
+    }
+    const ws = this._yWebsocketProvider?.ws;
+    if (ws) {
+      ws.addEventListener('message', this._handleConflictMessage);
+      this._conflictWs = ws;
+    }
+  }
+
+  private _handleConflictMessage = async (
+    event: MessageEvent
+  ): Promise<void> => {
+    if (!(event.data instanceof ArrayBuffer)) {
+      return;
+    }
+    const data = new Uint8Array(event.data);
+    if (data.length === 0) {
+      return;
+    }
+    const decoder = decoding.createDecoder(data);
+    try {
+      if (decoding.readVarUint(decoder) !== RAW_MESSAGE_TYPE) {
+        return;
+      }
+      const payload = JSON.parse(decoding.readVarString(decoder));
+      if (!payload || payload.type !== 'conflict') {
+        return;
+      }
+    } catch {
+      return;
+    }
+    const buttons: Dialog.IButton[] = [
+      Dialog.cancelButton({ label: this._trans.__('Dismiss') })
+    ];
+    if (this._onConflictRevert) {
+      buttons.push(
+        Dialog.warnButton({
+          label: this._trans.__('Revert'),
+          actions: ['revert']
+        })
+      );
+    }
+    if (this._onConflictSaveAs) {
+      buttons.push(
+        Dialog.okButton({
+          label: this._trans.__('Save As'),
+          actions: ['save-as']
+        })
+      );
+    }
+    const result = await showDialog({
+      title: this._trans.__('Edit Conflict'),
+      body: this._trans.__(
+        'Your recent changes could not be applied because the document ' +
+          'structure changed while you were disconnected (for example, another ' +
+          'user or external tool modified the file). Your edits were not ' +
+          'saved to the shared document.'
+      ),
+      buttons
+    });
+    if (result.button.actions.includes('revert')) {
+      await this._onConflictRevert?.();
+    } else if (result.button.actions.includes('save-as')) {
+      await this._onConflictSaveAs?.();
+    }
+  };
+
   private _onSync = (isSynced: boolean) => {
     if (isSynced) {
+      this._hasSynced = true;
       if (this._yWebsocketProvider) {
         this._yWebsocketProvider.off('sync', this._onSync);
 
@@ -171,16 +420,39 @@ export class WebSocketProvider implements IDocumentProvider, IForkProvider {
     }
   };
 
+  private _getCloseReasonMessage(code: 4400 | 4404 | 4500): string {
+    switch (code) {
+      case 4400: {
+        return this._trans.__('Bad request for %1', this._path);
+      }
+      case 4404: {
+        return this._trans.__('Could not find %1', this._path);
+      }
+      case 4500: {
+        return this._trans.__(
+          'Internal server error when loading %1',
+          this._path
+        );
+      }
+    }
+  }
+
   private _awareness: Awareness;
   private _contentType: string;
   private _format: string;
   private _isDisposed: boolean;
   private _path: string;
   private _ready = new PromiseDelegate<void>();
-  private _serverUrl: string;
+  private _customServerUrl?: string;
   private _sharedModel: YDocument<DocumentChange>;
   private _yWebsocketProvider: YWebsocketProvider | null;
+  private _serverSettings: ServerConnection.ISettings;
   private _trans: TranslationBundle;
+  private _hasSynced = false;
+  private _saveCounter = 0;
+  private _conflictWs: WebSocket | null = null;
+  private _onConflictSaveAs?: () => Promise<void>;
+  private _onConflictRevert?: () => Promise<void>;
 }
 
 /**
@@ -194,7 +466,7 @@ export namespace WebSocketProvider {
     /**
      * The server URL
      */
-    url: string;
+    url?: string;
 
     /**
      * The document file path
@@ -225,5 +497,20 @@ export namespace WebSocketProvider {
      * The jupyterlab translator
      */
     translator: TranslationBundle;
+
+    /**
+     * The server settings.
+     */
+    serverSettings?: ServerConnection.ISettings;
+
+    /**
+     * Called when the user chooses "Save As" from the conflict dialog.
+     */
+    onConflictSaveAs?: () => Promise<void>;
+
+    /**
+     * Called when the user chooses "Revert" from the conflict dialog.
+     */
+    onConflictRevert?: () => Promise<void>;
   }
 }

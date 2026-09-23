@@ -7,14 +7,14 @@ from pathlib import Path
 import click
 import tomlkit
 from jupyter_releaser.util import get_version, run
-from pkg_resources import parse_version, Requirement
-
+from packaging.requirements import Requirement
+from packaging.version import parse
 
 LERNA_CMD = "jlpm run lerna version --no-push --force-publish --no-git-tag-version"
 
 
 def increment_version(current, spec):
-    curr = parse_version(current)
+    curr = parse(current)
 
     if spec == "major":
         spec = f"{curr.major + 1}.0.0.a0"
@@ -23,13 +23,18 @@ def increment_version(current, spec):
         spec = f"{curr.major}.{curr.minor + 1}.0.a0"
 
     elif spec == "release":
-        p, x = curr.pre
+        if curr.pre:
+            p, x = curr.pre
+        else:
+            p = ""
         if p == "a":
             p = "b"
         elif p == "b":
             p = "rc"
         elif p == "rc":
             p = None
+        elif p == "":
+            p = "a"
         suffix = f"{p}0" if p else ""
         spec = f"{curr.major}.{curr.minor}.{curr.micro}{suffix}"
 
@@ -65,7 +70,7 @@ def bump(force, skip_if_dirty, spec):
         raise Exception("Must be in a clean git state with no untracked files")
 
     current = get_version()
-    version = parse_version(increment_version(current, spec))
+    version = parse(increment_version(current, spec))
 
     # convert the Python version
     js_version = f"{version.major}.{version.minor}.{version.micro}"
@@ -111,12 +116,12 @@ def bump(force, skip_if_dirty, spec):
     dependencies = tomlkit.array()
     for key in sorted(project_pins):
         if key != metapackage.replace("-", "_"):
-            next_major = f"{parse_version(project_pins[key]).major + 1}"
+            next_major = f"{parse(project_pins[key]).major + 1}"
             dependencies.add_line(key + ">=" + project_pins[key] + ",<" + next_major)
     # re-add other dependencies
     for dependency in old_dependencies:
-        requirement = Requirement.parse(dependency)
-        if requirement.project_name.replace("-", "_") not in project_pins:
+        requirement = Requirement(dependency)
+        if requirement.name.replace("-", "_") not in project_pins:
             dependencies.add_line(dependency)
     metapackage_toml.get("project").add("dependencies", dependencies.multiline(True))
     metapackage_toml_path.write_text(tomlkit.dumps(metapackage_toml))
