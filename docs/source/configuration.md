@@ -1,11 +1,37 @@
 # Configuration
 
+User Settings
+-----------------
+
+The user identity is managed by `jupyter-server` and is configurable starting from `jupyter-server` v2.17.0 and `jupyter-collaboration` v4.1.0.
+
+To change your username, display name, or color:
+
+1. Click the **Collaboration** icon in the left sidebar.
+2. In the **User Info** section, click your user icon.
+3. Edit your details in the form that appears.
+
+![User settings](images/rtc_user_settings.png)
+
+> **Note**: This functionality works only for standalone servers and is not supported in JupyterHub.
+
+Storage Configuration
+---------------------
+
 By default, any change made to a document is saved to disk in an SQLite database file called
 `.jupyter_ystore.db` in the directory where JupyterLab was launched. This file helps in
 preserving the timeline of documents, for instance between JupyterLab sessions, or when a user
 looses connection and goes offline for a while. You should never have to touch it, and it is
 fine to just ignore it, including in your version control system (don't commit this file). If
 you happen to delete it, there shouldn't be any serious consequence either.
+
+A second file, `collaboration_sessions.json`, is created inside a `.jupyter` directory under
+the server's root directory (`ServerApp.root_dir`, which defaults to the directory where
+JupyterLab was launched). It records recent collaboration session IDs so the backend can
+detect when a client is reconnecting after a server restart or version change, and prompt for
+a reload when the session can no longer be resumed safely. Like the YStore database, it is
+safe to ignore in version control and safe to delete (clients will simply be asked to reload
+on next connect).
 
 There are a number of settings that you can change:
 
@@ -26,8 +52,22 @@ jupyter lab --YDocExtension.file_poll_interval=2
 # If None, the document will be kept in memory forever.
 jupyter lab --YDocExtension.document_cleanup_delay=100
 
+# Whether documents loaded from disk should be streamed progressively (default: False).
+jupyter lab --YDocExtension.document_load_progressively=True
+
+# Delay notebook outputs larger than this size in MB during progressive loading (default: 100).
+# If None, outputs are loaded with the inputs.
+jupyter lab --YDocExtension.notebook_output_delay_threshold_mb=50
+
 # The YStore class to use for storing Y updates (default: JupyterSQLiteYStore).
 jupyter lab --YDocExtension.ystore_class=pycrdt.store.TempFileYStore
+
+# Relocate the YStore SQLite database (default: '.jupyter_ystore.db' in the launch directory).
+jupyter lab --SQLiteYStore.db_path=/path/to/ystore.db
+
+# Relocate the collaboration session store
+# (default: '<server_root_dir>/.jupyter/collaboration_sessions.json').
+jupyter lab --YDocExtension.session_store_path=/path/to/sessions.json
 ```
 
 There is an experimental feature that is currently only supported by the

@@ -7,7 +7,11 @@ from traitlets import Int, Unicode
 from traitlets.config import LoggingConfigurable
 
 
-class TempFileYStore(_TempFileYStore):
+class TempFileYStoreMetaclass(type(LoggingConfigurable), type(_TempFileYStore)):  # type: ignore
+    pass
+
+
+class TempFileYStore(LoggingConfigurable, _TempFileYStore, metaclass=TempFileYStoreMetaclass):
     prefix_dir = "jupyter_ystore_"
 
 
@@ -23,10 +27,18 @@ class SQLiteYStore(LoggingConfigurable, _SQLiteYStore, metaclass=SQLiteYStoreMet
         directory.""",
     )
 
-    document_ttl = Int(
+    squash_after_inactivity_of = Int(
         None,
         allow_none=True,
         config=True,
         help="""The document time-to-live in seconds. Defaults to None (document history is never
         cleared).""",
+    )
+    document_ttl = Int(
+        None,
+        allow_none=True,
+        config=True,
+        help="""The document time-to-live in seconds.
+        Deprecated in favor of 'squash_after_inactivity_of'.
+        Defaults to None (document history is never cleared).""",
     )

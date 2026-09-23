@@ -4,10 +4,13 @@
 from __future__ import annotations
 
 import asyncio
+import logging
 from datetime import datetime, timedelta, timezone
 
+import pytest
 from jupyter_server_ydoc_codio.loaders import FileLoader, FileLoaderMapping
 from jupyter_server_ydoc_codio.test_utils import FakeContentsManager, FakeFileIDManager
+from tornado.web import HTTPError
 
 
 async def test_FileLoader_with_watcher():
@@ -43,6 +46,66 @@ async def test_FileLoader_with_watcher():
         await loader.clean()
 
 
+async def test_FileLoader_with_watcher_errors(caplog):
+    id = "file-4567"
+    path = "myfile.txt"
+    paths = {}
+    paths[id] = path
+
+    cm = FakeContentsManager({"last_modified": datetime.now(timezone.utc)})
+
+    loader = FileLoader(
+        id,
+        FakeFileIDManager(paths),
+        cm,
+        poll_interval=0.1,
+        max_consecutive_logs=2,
+        stop_poll_on_errors_after=1,
+    )
+    await loader.load_content("text", "file")
+
+    try:
+        cm.model = {}
+        await asyncio.sleep(0.5)
+        logs = [r.getMessage() for r in caplog.records]
+        assert logs == [
+            "Error watching file myfile.txt: HTTP 404: Not Found (File not found: myfile.txt)",
+            "Error watching file myfile.txt: HTTP 404: Not Found (File not found: myfile.txt)",
+            "Too many errors while watching myfile.txt - suppressing further logs.",
+        ]
+
+        await asyncio.sleep(1)
+        logs = [r.getMessage() for r in caplog.records]
+        assert len(logs) == 4
+        assert (
+            logs[-1]
+            == "Stopping watching file due to consecutive errors over 1 seconds: myfile.txt"
+        )
+    finally:
+        await loader.clean()
+
+
+async def test_FileLoader_clean_logs_cancellation(caplog):
+    id = "file-4567"
+    path = "myfile.txt"
+    paths = {id: path}
+
+    cm = FakeContentsManager({"last_modified": datetime.now(timezone.utc)})
+    loader = FileLoader(
+        id,
+        FakeFileIDManager(paths),
+        cm,
+        poll_interval=0.05,
+    )
+    await loader.load_content("text", "file")
+
+    caplog.set_level(logging.INFO)
+    await loader.clean()
+
+    messages = [r.getMessage() for r in caplog.records]
+    assert f"File watcher for '{id}' was cancelled" in messages
+
+
 async def test_FileLoader_without_watcher():
     id = "file-4567"
     path = "myfile.txt"
@@ -73,6 +136,64 @@ async def test_FileLoader_without_watcher():
         assert triggered
     finally:
         await loader.clean()
+
+
+async def test_FileLoader_retries_save_after_rename():
+    id = "file-4567"
+    old_path = "myfile.txt"
+    new_path = "renamed.txt"
+    file_id_manager = FakeFileIDManager({id: old_path})
+
+    class RenameDuringSaveContentsManager(FakeContentsManager):
+        def __init__(self):
+            super().__init__({"last_modified": datetime.now(timezone.utc), "writable": True})
+            self.saved_paths: list[str] = []
+
+        def save(self, model, path):
+            self.saved_paths.append(path)
+            if path == old_path:
+                file_id_manager.move(id, new_path)
+                raise HTTPError(404, f"File not found: {path}")
+            return self.model
+
+    cm = RenameDuringSaveContentsManager()
+    loader = FileLoader(id, file_id_manager, cm)
+    await loader.load_content("text", "file")
+
+    saved_model = await loader.maybe_save_content(
+        {"format": "text", "type": "file", "content": "content"}
+    )
+
+    assert saved_model is not None
+    assert saved_model["hash"] == "fake_hash"
+    assert cm.saved_paths == [old_path, new_path]
+
+
+async def test_FileLoader_does_not_retry_save_after_delete():
+    id = "file-4567"
+    path = "myfile.txt"
+    file_id_manager = FakeFileIDManager({id: path})
+    save_error = HTTPError(404, f"File not found: {path}")
+
+    class DeleteDuringSaveContentsManager(FakeContentsManager):
+        def __init__(self):
+            super().__init__({"last_modified": datetime.now(timezone.utc), "writable": True})
+            self.save_count = 0
+
+        def save(self, model, path):
+            self.save_count += 1
+            del file_id_manager.mapping[id]
+            raise save_error
+
+    cm = DeleteDuringSaveContentsManager()
+    loader = FileLoader(id, file_id_manager, cm)
+    await loader.load_content("text", "file")
+
+    with pytest.raises(HTTPError, match="File not found") as exc_info:
+        await loader.maybe_save_content({"format": "text", "type": "file", "content": "content"})
+
+    assert exc_info.value is save_error
+    assert cm.save_count == 1
 
 
 async def test_FileLoaderMapping_with_watcher():

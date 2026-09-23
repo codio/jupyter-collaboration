@@ -7,6 +7,7 @@ from datetime import datetime
 from typing import Any
 
 from jupyter_server import _tz as tz
+from tornado.web import HTTPError
 
 
 class FakeFileIDManager:
@@ -32,14 +33,22 @@ class FakeContentsManager:
             "mimetype": None,
             "size": 0,
             "writable": False,
+            "hash": "fake_hash",
         }
         self.model.update(model)
 
         self.actions: list[str] = []
 
     def get(
-        self, path: str, content: bool = True, format: str | None = None, type: str | None = None
+        self,
+        path: str,
+        content: bool = True,
+        format: str | None = None,
+        type: str | None = None,
+        require_hash: bool | None = None,
     ) -> dict:
+        if not self.model:
+            raise HTTPError(404, f"File not found: {path}")
         self.actions.append("get")
         return self.model
 

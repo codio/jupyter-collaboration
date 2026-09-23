@@ -3,15 +3,16 @@
 from __future__ import annotations
 
 import asyncio
+from collections import defaultdict
 from functools import partial
-from typing import Literal
+from typing import Literal, cast
 
 from jupyter_server.extension.application import ExtensionApp
 from jupyter_ydoc import ydocs as YDOCS
 from jupyter_ydoc.ybasedoc import YBaseDoc
 from pycrdt import Doc
 from pycrdt.store import BaseYStore
-from traitlets import Bool, Float, Type
+from traitlets import Bool, Float, Type, Unicode
 
 from .handlers import (
     DocForkHandler,
@@ -27,6 +28,7 @@ from .utils import (
     AWARENESS_EVENTS_SCHEMA_PATH,
     EVENTS_SCHEMA_PATH,
     FORK_EVENTS_SCHEMA_PATH,
+    decode_file_path,
     encode_file_path,
     room_id_from_encoded_path,
 )
@@ -50,6 +52,14 @@ class YDocExtension(ExtensionApp):
         saving changes from the front-end.""",
     )
 
+    file_stop_poll_on_errors_after = Float(
+        24 * 60 * 60,
+        allow_none=True,
+        config=True,
+        help="""The duration in seconds to stop polling a file after consecutive errors.
+        Defaults to 24 hours, if None then polling will not stop on errors.""",
+    )
+
     document_cleanup_delay = Float(
         60,
         allow_none=True,
@@ -64,6 +74,22 @@ class YDocExtension(ExtensionApp):
         config=True,
         help="""The delay in seconds to wait after a change is made to a document before saving it.
         Defaults to 1s, if None then the document will never be saved.""",
+    )
+
+    document_load_progressively = Bool(
+        False,
+        config=True,
+        help="""Whether to progressively load documents from disk into the shared document.
+        When enabled, a shared document can stream its content to clients before the full
+        source file has finished loading.""",
+    )
+
+    notebook_output_delay_threshold_mb = Float(
+        100,
+        allow_none=True,
+        config=True,
+        help="""Output size in MB above which a shared notebook may delay loading outputs during
+        progressive document loading. Set to None to keep loading outputs with the inputs.""",
     )
 
     ystore_class = Type(
@@ -83,6 +109,19 @@ class YDocExtension(ExtensionApp):
         model.""",
     )
 
+    session_store_path = Unicode(
+        None,
+        allow_none=True,
+        config=True,
+        help="""Path to the JSON file used to record collaboration session IDs for
+        reconnect compatibility checks. When unset, defaults to
+        ``<server_root_dir>/.jupyter/collaboration_sessions.json``. Set this to
+        relocate the file (for example into a dedicated data directory) so the
+        server root stays free of generated state.""",
+    )
+
+    _room_locks: dict[str, asyncio.Lock] = defaultdict(asyncio.Lock)
+
     def initialize(self):
         super().initialize()
         self.serverapp.event_logger.register_event_schema(EVENTS_SCHEMA_PATH)
@@ -95,7 +134,12 @@ class YDocExtension(ExtensionApp):
                 "collaborative_file_poll_interval": self.file_poll_interval,
                 "collaborative_document_cleanup_delay": self.document_cleanup_delay,
                 "collaborative_document_save_delay": self.document_save_delay,
+                "collaborative_document_load_progressively": self.document_load_progressively,
+                "collaborative_notebook_output_delay_threshold_mb": (
+                    self.notebook_output_delay_threshold_mb
+                ),
                 "collaborative_ystore_class": self.ystore_class,
+                "collaborative_session_store_path": self.session_store_path,
             }
         )
 
@@ -121,7 +165,10 @@ class YDocExtension(ExtensionApp):
         # the global app settings in which the file id manager will register
         # itself maybe at a later time.
         self.file_loaders = FileLoaderMapping(
-            self.serverapp.web_app.settings, self.log, self.file_poll_interval
+            self.serverapp.web_app.settings,
+            self.log,
+            self.file_poll_interval,
+            file_stop_poll_on_errors_after=self.file_stop_poll_on_errors_after,
         )
 
         self.handlers.extend(
@@ -139,9 +186,14 @@ class YDocExtension(ExtensionApp):
                     {
                         "document_cleanup_delay": self.document_cleanup_delay,
                         "document_save_delay": self.document_save_delay,
+                        "document_load_progressively": self.document_load_progressively,
+                        "notebook_output_delay_threshold_mb": (
+                            self.notebook_output_delay_threshold_mb
+                        ),
                         "file_loaders": self.file_loaders,
                         "ystore_class": ystore_class,
                         "ywebsocket_server": self.ywebsocket_server,
+                        "room_locks": self._room_locks,
                     },
                 ),
                 (r"/api/collaboration/session/(.*)", DocSessionHandler),
@@ -171,6 +223,7 @@ class YDocExtension(ExtensionApp):
         file_format: Literal["json", "text"] | None = None,
         room_id: str | None = None,
         copy: bool = True,
+        create: bool = False,
     ) -> YBaseDoc | None:
         """Get a view of the shared model for the matching document.
 
@@ -179,8 +232,13 @@ class YDocExtension(ExtensionApp):
 
         If `copy=True`, the returned shared model is a fork, meaning that any changes
          made to it will not be propagated to the shared model used by the application.
+
+        If `create=True`, the room will be created if it doesn't exist.
         """
-        error_msg = "You need to provide either a ``room_id`` or the ``path``, the ``content_type`` and the ``file_format``."
+        error_msg = (
+            "You need to provide either a ``room_id`` or the ``path``, "
+            "the ``content_type`` and the ``file_format``."
+        )
         if room_id is None:
             if path is None or content_type is None or file_format is None:
                 raise ValueError(error_msg)
@@ -193,16 +251,62 @@ class YDocExtension(ExtensionApp):
 
         elif path is not None or content_type is not None or file_format is not None:
             raise ValueError(error_msg)
-        else:
-            room_id = room_id
 
-        try:
-            room = await self.ywebsocket_server.get_room(room_id)
-        except RoomNotFound:
-            return None
+        async with self._room_locks[room_id]:
+            try:
+                room = await self.ywebsocket_server.get_room(room_id)
+            except RoomNotFound:
+                if not create:
+                    return None
+
+                if not self.ywebsocket_server.started.is_set():
+                    asyncio.create_task(self.ywebsocket_server.start())
+                    await self.ywebsocket_server.started.wait()
+
+                file_format_str, file_type, file_id = decode_file_path(room_id)
+                # cast down so mypy won’t complain when we pass this into DocumentRoom
+                file_format = cast(Literal["json", "text"], file_format_str)
+                updates_file_path = f".{file_type}:{file_id}.y"
+                ystore = self.ystore_class(
+                    path=updates_file_path,
+                    log=self.log,
+                )
+                # Create a new room
+                room = DocumentRoom(
+                    room_id,
+                    file_format,
+                    file_type,
+                    self.file_loaders[file_id],
+                    self.serverapp.event_logger,
+                    ystore,
+                    self.log,
+                    exception_handler=exception_logger,
+                    save_delay=self.document_save_delay,
+                    document_load_progressively=self.document_load_progressively,
+                    notebook_output_delay_threshold_mb=self.notebook_output_delay_threshold_mb,
+                )
+                try:
+                    await self.ywebsocket_server.start_room(room)
+                    self.ywebsocket_server.add_room(room_id, room)
+                    await room.initialize()
+                    self.log.info(f"Created and started room: {room_id}")
+                except Exception as e:
+                    self.log.error("Room %s failed to start on websocket server", room_id)
+                    # Clean room
+                    await room.stop()
+                    self.log.info("Room %s deleted", room_id)
+                    file = self.file_loaders[file_id]
+                    if file.number_of_subscriptions == 0 or (
+                        file.number_of_subscriptions == 1 and room_id in file._subscriptions
+                    ):
+                        self.log.info("Deleting file %s", file.path)
+                        await self.file_loaders.remove(file_id)
+                    raise e
 
         if isinstance(room, DocumentRoom):
             if copy:
+                if room._document_load_progressively:
+                    await room._document_progressively_loaded
                 update = room.ydoc.get_update()
 
                 fork_ydoc: Doc = Doc()

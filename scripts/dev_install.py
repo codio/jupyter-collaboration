@@ -3,15 +3,14 @@
 
 import subprocess
 from pathlib import Path
-from typing import Optional
 
 
-def execute(cmd: str, cwd: Optional[Path] = None) -> None:
+def execute(cmd: str, cwd: Path | None = None) -> None:
     subprocess.run(cmd.split(" "), check=True, cwd=cwd)
 
 
 def install_dev() -> None:
-    install_build_deps = "python -m pip install jupyterlab>=4.4.0,<5"
+    install_build_deps = "python -m pip install jupyterlab>=4.6.0,<5"
     install_js_deps = "jlpm install"
 
     python_package_prefix = "projects"
@@ -23,6 +22,13 @@ def install_dev() -> None:
     for py_package in python_packages:
         real_package_name = py_package.replace("-", "_")
         execute(f"pip uninstall {real_package_name} -y")
+        # Clean old labextension builds to avoid skip-if-exists cache issues
+        if py_package in ["jupyter-collaboration-ui", "jupyter-docprovider"]:
+            labext_dir = (
+                Path(python_package_prefix) / py_package / real_package_name / "labextension"
+            )
+            if labext_dir.exists():
+                execute(f"rm -rf {labext_dir}")
         execute(f"pip install -e {python_package_prefix}/{py_package}[test]")
 
         # List of server extensions
@@ -32,7 +38,8 @@ def install_dev() -> None:
         # List of jupyterlab extensions
         if py_package in ["jupyter-collaboration-ui-codio", "jupyter-docprovider-codio"]:
             execute(
-                f"jupyter labextension develop --overwrite {python_package_prefix}/{py_package} --overwrite"
+                "jupyter labextension develop --overwrite "
+                f"{python_package_prefix}/{py_package} --overwrite"
             )
 
 

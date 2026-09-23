@@ -3,13 +3,13 @@
 
 [build-system]
 build-backend = "hatchling.build"
-requires = ["hatchling>=1.4.0", "jupyterlab>=4.0.0"]
+requires = ["hatchling>=1.4.0", "jupyter-builder>=1.2.0"]
 
 [project]
 name = "jupyter-collaboration-ui-codio"
 readme = "README.md"
 license = { file = "LICENSE" }
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 description = "JupyterLab/Jupyter Notebook 7+ extension providing user interface integration for real time collaboration"
 classifiers = [
     "Intended Audience :: Developers",
@@ -17,11 +17,11 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: BSD License",
     "Programming Language :: Python",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Framework :: Jupyter",
     "Framework :: Jupyter :: JupyterLab",
     "Framework :: Jupyter :: JupyterLab :: 4",
@@ -37,31 +37,31 @@ dynamic = ["version"]
 Documentation = "https://jupyterlab-realtime-collaboration.readthedocs.io/"
 Repository = "https://github.com/codio/jupyter-collaboration"
 Changelog = "https://jupyterlab-realtime-collaboration.readthedocs.io/en/latest/changelog.html"
-Source = "https://github.com/codio/jupyter-collaboration/tree/main/packages/collaboration-extension"
+Source = "https://github.com/codio/jupyter-collaboration/tree/main/packages/jupyter-collaboration-extension-codio"
 Issues = "https://github.com/codio/jupyter-collaboration/issues/new/choose"
 
 [tool.hatch.version]
-path = "jupyter_collaboration_ui/_version.py"
+path = "jupyter_collaboration_ui_codio/_version.py"
 
 [tool.hatch.build.targets.sdist]
-artifacts = ["jupyter_collaboration_ui/labextension"]
+artifacts = ["jupyter_collaboration_ui_codio/labextension"]
 exclude = ["/.github", "/binder", "node_modules"]
 
 [tool.hatch.build.targets.sdist.force-include]
 "../../packages" = "packages"
 
 [tool.hatch.build.targets.wheel.shared-data]
-"jupyter_collaboration_ui/labextension" = "share/jupyter/labextensions/@jupyter/collaboration-extension"
-"install.json" = "share/jupyter/labextensions/@jupyter/collaboration-extension/install.json"
+"jupyter_collaboration_ui_codio/labextension" = "share/jupyter/labextensions/jupyter-collaboration-extension-codio"
+"install.json" = "share/jupyter/labextensions/jupyter-collaboration-extension-codio/install.json"
 
 [tool.hatch.build.hooks.jupyter-builder]
 dependencies = ["hatch-jupyter-builder>=0.5"]
 build-function = "hatch_jupyter_builder.npm_builder"
 ensured-targets = [
-    "jupyter_collaboration_ui/labextension/static/style.js",
-    "jupyter_collaboration_ui/labextension/package.json",
+    "jupyter_collaboration_ui_codio/labextension/static/style.js",
+    "jupyter_collaboration_ui_codio/labextension/package.json",
 ]
-skip-if-exists = ["jupyter_collaboration_ui/labextension/static/style.js"]
+skip-if-exists = ["jupyter_collaboration_ui_codio/labextension/static/style.js"]
 
 [tool.hatch.build.hooks.jupyter-builder.build-kwargs]
 npm = ["jlpm"]

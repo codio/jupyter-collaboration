@@ -76,7 +76,10 @@ export const getCodioProjectState = async () => {
   }
 
   const p = new Promise((resolve, reject) => {
-    window.codio.subscribe('projectState', async (data: any) => {
+    if (!window.codio) {
+      resolve({})
+    }
+    window.codio?.subscribe('projectState', async (data: any) => {
       resolve(data)
     })
     setTimeout(() => {
@@ -84,8 +87,24 @@ export const getCodioProjectState = async () => {
     }, 10 * 1000)
   })
 
+  const codioLoaded = () => {
+    return new Promise((resolve, reject) => {
+      if (!window.codio) {
+        resolve(null)
+      }
+      window.codio?.loaded().then(() => {
+        console.log('[docprovider-extension] codio loaded')
+        resolve(null)
+      })
+      setTimeout(() => {
+        console.log('[docprovider-extension] codio load timeout')
+        resolve(null)
+      }, 10 * 1000)
+    })
+  }
+
   window.codio?.setLoaded()
-  await window.codio.loaded()
+  await codioLoaded()
 
   return p
 }

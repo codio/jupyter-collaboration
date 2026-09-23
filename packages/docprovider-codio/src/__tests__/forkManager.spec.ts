@@ -1,12 +1,12 @@
 // Copyright (c) Jupyter Development Team.
 // Distributed under the terms of the Modified BSD License.
 
-import { ICollaborativeContentProvider } from '@jupyter/collaborative-drive';
+import { ICollaborativeContentProvider } from '../../../jupyter-collaborative-drive-codio/lib';
 import {
   ForkManager,
   JUPYTER_COLLABORATION_FORK_EVENTS_URI
 } from '../forkManager';
-import { Event } from '@jupyterlab/services';
+import { Event, ServerConnection } from '@jupyterlab/services';
 import { Signal } from '@lumino/signaling';
 import { requestAPI } from '../requests';
 jest.mock('../requests');
@@ -18,13 +18,15 @@ const stream = new Signal({});
 const eventManagerMock = {
   stream: stream as any
 } as Event.IManager;
+const serverSettingsMock = {} as ServerConnection.ISettings;
 
 describe('docprovider-codio', () => {
   let manager: ForkManager;
   beforeEach(() => {
     manager = new ForkManager({
       contentProvider: contentProviderMock,
-      eventManager: eventManagerMock
+      eventManager: eventManagerMock,
+      serverSettings: serverSettingsMock
     });
   });
   describe('forkManager', () => {
@@ -50,7 +52,8 @@ describe('docprovider-codio', () => {
             description: 'my fork description',
             synchronize: true
           })
-        }
+        },
+        serverSettingsMock
       );
     });
     it('should be able to get all forks', async () => {
@@ -59,7 +62,8 @@ describe('docprovider-codio', () => {
         'api/collaboration/fork/root-uuid',
         {
           method: 'GET'
-        }
+        },
+        serverSettingsMock
       );
     });
     it('should be able to get delete forks', async () => {
@@ -68,7 +72,8 @@ describe('docprovider-codio', () => {
         'api/collaboration/fork/fork-uuid?merge=true',
         {
           method: 'DELETE'
-        }
+        },
+        serverSettingsMock
       );
     });
     it('should be able to emit fork added signal', async () => {
