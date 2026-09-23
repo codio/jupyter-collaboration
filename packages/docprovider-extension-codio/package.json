@@ -1,6 +1,6 @@
 {
   "name": "docprovider-extension-codio",
-  "version": "4.4.6-rc.0",
+  "version": "4.4.6-rc.1",
   "description": "Codio fork of JupyterLab - Collaborative Shared Models",
   "keywords": [
     "jupyter",
@@ -65,8 +65,8 @@
     "@jupyterlab/settingregistry": "^4.5.0",
     "@jupyterlab/translation": "^4.5.0",
     "@lumino/commands": "^2.3.2",
-    "docprovider-codio": "^4.4.6-rc.0",
-    "jupyter-collaborative-drive-codio": "^4.4.6-rc.0",
+    "docprovider-codio": "^4.4.6-rc.1",
+    "jupyter-collaborative-drive-codio": "^4.4.6-rc.1",
     "y-protocols": "^1.0.5",
     "y-websocket": "^1.3.15",
     "yjs": "^13.5.40"
