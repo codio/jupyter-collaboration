@@ -10,12 +10,14 @@ from typing import Any
 import nbformat
 import pytest
 from httpx_ws import aconnect_ws
-from jupyter_server_ydoc_codio.loaders import FileLoader
-from jupyter_server_ydoc_codio.rooms import DocumentRoom
-from jupyter_server_ydoc_codio.stores import SQLiteYStore
+
 from jupyter_ydoc import YNotebook, YUnicode
 from pycrdt import Provider
 from pycrdt.websocket.websocket import HttpxWebsocket
+
+from jupyter_server_ydoc_codio.loaders import FileLoader
+from jupyter_server_ydoc_codio.rooms import DocumentRoom
+from jupyter_server_ydoc_codio.stores import SQLiteYStore
 
 from .test_utils import (
     FakeContentsManager,
@@ -30,7 +32,14 @@ def rtc_document_save_delay():
 
 
 @pytest.fixture
-def jp_server_config(jp_root_dir, jp_server_config, rtc_document_save_delay):
+def rtc_document_cleanup_delay():
+    return 60
+
+
+@pytest.fixture
+def jp_server_config(
+    jp_root_dir, jp_server_config, rtc_document_save_delay, rtc_document_cleanup_delay
+):
     return {
         "ServerApp": {
             "jpserver_extensions": {
@@ -47,7 +56,10 @@ def jp_server_config(jp_root_dir, jp_server_config, rtc_document_save_delay):
             "db_path": str(jp_root_dir.joinpath(".fid_test.db")),
             "db_journal_mode": "OFF",
         },
-        "YDocExtension": {"document_save_delay": rtc_document_save_delay},
+        "YDocExtension": {
+            "document_save_delay": rtc_document_save_delay,
+            "document_cleanup_delay": rtc_document_cleanup_delay,
+        },
     }
 
 

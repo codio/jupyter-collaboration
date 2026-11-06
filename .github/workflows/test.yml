@@ -29,7 +29,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install "jupyterlab>=4.4.0a2,<5"
+          pip install "jupyterlab>=4.4.0,<5"
           jlpm install
 
       - name: Run pre-commit
@@ -86,7 +86,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14", "3.14t"]
         # PyPy is not supported because we use the file_id_manager. See:
         # https://github.com/jupyter-server/jupyter_server_fileid/issues/44
         #include:
@@ -128,6 +128,12 @@ jobs:
         run: |
           python -W ignore::ImportWarning -m pytest -vv --cov jupyter_server_ydoc_codio --cov-branch --cov-report term-missing:skip-covered
 
+      - name: Check that all endpoints are authenticated
+        shell: bash
+        run: |
+          set -eux
+          python .github/scripts/check_auth.py
+
       - uses: jupyterlab/maintainer-tools/.github/actions/upload-coverage@v1
 
       - name: Build the extension
@@ -152,7 +158,7 @@ jobs:
       - name: Base Setup
         uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
         with:
-          python_version: "3.9"
+          python_version: "3.10"
           dependency_type: minimum
 
       - name: Install the Python dependencies
@@ -226,7 +232,7 @@ jobs:
           mkdir test
           find *.tar.gz | xargs -L 1 tar -C ./test -zxvf
           cd test
-          python -m pip install "jupyterlab>=4.0.0,<5"
+          python -m pip install "jupyterlab>=4.4.0,<5"
           # install each from source, except for `jupyter_collaboration` metapackage
           find ./* -maxdepth 0 -type d -not -path './jupyter_collaboration-*' | sed 's/$/[test]/' | xargs -L 1 python -m pip install
           echo "::endgroup::"
@@ -258,7 +264,7 @@ jobs:
       - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
       - uses: jupyterlab/maintainer-tools/.github/actions/check-links@v1
         with:
-          ignore_links: "../api/*.* ./api/* .*/images/[\\w-]+.png https://docs.github.com/en/.* https://github.com/.* https://mybinder.org/v2/gh/jupyterlab/jupyter_collaboration/.*"
+          ignore_links: "../api/*.* ./api/* .*/images/[\\w-]+.png https://docs.github.com/en/.* https://github.com/.* https://mybinder.org/v2/gh/jupyterlab/jupyter_collaboration/.* https://www.npmjs.com.*"
 
   ui_tests:
     runs-on: ubuntu-latest
@@ -275,7 +281,7 @@ jobs:
           name: "sdist"
       - name: Install dependencies
         run: |
-          pip install "jupyterlab>=4.4.0a2" jupyter_collaboration_ui*.tar.gz jupyter_docprovider*.tar.gz jupyter_server_ydoc_codio*.tar.gz
+          pip install "jupyterlab>=4.4.0" jupyter_collaboration_ui*.tar.gz jupyter_docprovider*.tar.gz jupyter_server_ydoc_codio*.tar.gz
 
       - name: Install playwright
         env:
@@ -283,12 +289,22 @@ jobs:
         run: |
           jlpm install
         working-directory: ui-tests
+
+      - name: Find out Playwright version
+        id: pw-version
+        run: |
+          set -e
+          PW_VERSION=$(grep -m1 "playwright@" yarn.lock)
+          echo "Playwright version: $PW_VERSION"
+          echo "version=$PW_VERSION" >> $GITHUB_OUTPUT
+        working-directory: ui-tests
+
       - name: Set up browser cache
-        uses: actions/cache@v3
+        uses: actions/cache@v5
         with:
-          path: |
-            ${{ github.workspace }}/pw-browsers
-          key: ${{ runner.os }}-${{ hashFiles('ui-tests/yarn.lock') }}
+          path: ${{ github.workspace }}/pw-browsers
+          key: ${{ runner.os }}-${{ steps.pw-version.outputs.version }}
+
       - name: Install browser
         run: jlpm playwright install chromium
         working-directory: ui-tests

@@ -4,7 +4,9 @@
 from __future__ import annotations
 
 import asyncio
+from unittest.mock import AsyncMock, patch
 
+from jupyter_server_ydoc.utils import OutOfBandChanges
 from jupyter_ydoc import YUnicode
 
 
@@ -121,6 +123,109 @@ async def test_should_save_content_when_at_least_one_client_has_autosave_enabled
     assert "save" in cm.actions
 
 
+async def test_manual_save_should_not_have_delay(
+    rtc_create_mock_document_room,
+):
+    content = "test"
+    cm, _, room = rtc_create_mock_document_room("test-id", "test.txt", content, save_delay=0.5)
+
+    await room.initialize()
+
+    # Trigger a manual save
+    room._save_to_disc()
+
+    # Manual save should execute immediately, without waiting for the 0.5s delay
+    # Check that save happens within a very short time (100ms should be enough)
+    await asyncio.sleep(0.1)
+
+    assert cm.actions.count("save") == 1
+
+
+async def test_manual_save_with_pending_autosave_should_cancel_autosave(
+    rtc_create_mock_document_room,
+):
+    content = "test"
+    cm, _, room = rtc_create_mock_document_room("test-id", "test.txt", content, save_delay=1.0)
+
+    await room.initialize()
+
+    room._document.source = "Test 2"
+
+    await asyncio.sleep(0.1)
+
+    assert cm.actions.count("save") == 0
+
+    save_task = room._save_to_disc()
+
+    # Manual save should execute immediately
+    await asyncio.sleep(0.1)
+    assert save_task.done()
+
+    # Check that the manual save was recorded
+    assert cm.actions.count("save") == 1
+
+    await asyncio.sleep(1.0)
+
+    # There should be only one save (the manual one), not two
+    assert cm.actions.count("save") == 1
+
+
+async def test_manual_save_should_execute_immediately_even_with_long_delay(
+    rtc_create_mock_document_room,
+):
+    content = "test"
+    cm, _, room = rtc_create_mock_document_room("test-id", "test.txt", content, save_delay=5.0)
+
+    await room.initialize()
+
+    save_task = room._save_to_disc()
+
+    await asyncio.sleep(0.5)
+
+    assert "save" in cm.actions
+    assert save_task.done()
+
+
+async def test_autosave_should_still_have_delay(
+    rtc_create_mock_document_room,
+):
+    content = "test"
+    save_delay = 0.3
+    cm, _, room = rtc_create_mock_document_room(
+        "test-id", "test.txt", content, save_delay=save_delay
+    )
+
+    await room.initialize()
+
+    room._document.source = "Test 3"
+
+    await asyncio.sleep(0.1)
+    assert "save" not in cm.actions
+
+    # Wait for the delay to complete
+    await asyncio.sleep(save_delay)
+
+    assert "save" in cm.actions
+
+
+async def test_manual_save_should_work_when_save_delay_is_none_and_save_now_is_true(
+    rtc_create_mock_document_room,
+):
+    """Test that manual saves execute even when save_delay is None."""
+    content = "test"
+    # When save_delay is None, autosave is disabled
+    cm, _, room = rtc_create_mock_document_room("test-id", "test.txt", content, save_delay=None)
+
+    await room.initialize()
+
+    # Trigger a manual save with save_now=True
+    # Even though save_delay is None, manual saves should still work
+    await room._maybe_save_document(None, save_now=True)
+
+    # Manual save should have executed
+    assert cm.actions.count("save") == 1
+
+
 # The following test should be restored when package versions are fixed.
 
 # async def test_document_path(rtc_create_mock_document_room):
@@ -140,3 +245,83 @@ async def test_should_save_content_when_at_least_one_client_has_autosave_enabled
 #     await asyncio.sleep(0.15)
 
 #     assert room._document.path == new_path
+
+
+async def test_on_outofband_change_skips_aset_when_content_unchanged(
+    rtc_create_mock_document_room,
+):
+    """aset should not be called when out-of-band content matches the document."""
+    content = "test"
+    _, _, room = rtc_create_mock_document_room("test-id", "test.txt", content)
+    await room.initialize()
+
+    with patch.object(room._document, "aset", new_callable=AsyncMock) as mock_aset:
+        await room._on_outofband_change()
+        mock_aset.assert_not_called()
+
+    assert not room._document.dirty
+
+
+async def test_on_outofband_change_calls_aset_when_content_changed(
+    rtc_create_mock_document_room,
+):
+    """aset should be called when out-of-band content differs from the document."""
+    content = "test"
+    cm, _, room = rtc_create_mock_document_room("test-id", "test.txt", content)
+    await room.initialize()
+
+    # Simulate the file changing on disk
+    cm.model["content"] = "new content from disk"
+
+    with patch.object(room._document, "aset", new_callable=AsyncMock) as mock_aset:
+        await room._on_outofband_change()
+        mock_aset.assert_called_once_with("new content from disk")
+
+    assert not room._document.dirty
+
+
+async def test_save_oob_skips_aset_when_content_unchanged(
+    rtc_create_mock_document_room,
+):
+    """During save with OutOfBandChanges, aset should be skipped if content matches."""
+    content = "test"
+    cm, loader, room = rtc_create_mock_document_room(
+        "test-id", "test.txt", content, save_delay=0.01
+    )
+    await room.initialize()
+
+    with (
+        patch.object(
+            loader, "maybe_save_content", new_callable=AsyncMock, side_effect=OutOfBandChanges
+        ),
+        patch.object(room._document, "aset", new_callable=AsyncMock) as mock_aset,
+    ):
+        await room._maybe_save_document(None, save_now=True)
+        mock_aset.assert_not_called()
+
+    assert not room._document.dirty
+
+
+async def test_save_oob_calls_aset_when_content_changed(
+    rtc_create_mock_document_room,
+):
+    """During save with OutOfBandChanges, aset should be called if content differs."""
+    content = "test"
+    cm, loader, room = rtc_create_mock_document_room(
+        "test-id", "test.txt", content, save_delay=0.01
+    )
+    await room.initialize()
+
+    # Simulate file changing on disk after save attempt
+    cm.model["content"] = "changed on disk"
+
+    with (
+        patch.object(
+            loader, "maybe_save_content", new_callable=AsyncMock, side_effect=OutOfBandChanges
+        ),
+        patch.object(room._document, "aset", new_callable=AsyncMock) as mock_aset,
+    ):
+        await room._maybe_save_document(None, save_now=True)
+        mock_aset.assert_called_once_with("changed on disk")
+
+    assert not room._document.dirty

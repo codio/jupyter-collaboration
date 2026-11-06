@@ -4,16 +4,23 @@
 from __future__ import annotations
 
 import asyncio
+import json
+from collections.abc import Callable
 from logging import Logger
-from typing import Any, Callable
+from typing import Any
 
 from jupyter_events import EventLogger
 from jupyter_ydoc import ydocs as YDOCS
-from pycrdt.websocket import YRoom
+from pycrdt import (
+    Channel,
+    Doc,
+    Encoder,
+)
 from pycrdt.store import BaseYStore, YDocNotFound
+from pycrdt.websocket import YRoom
 
 from .loaders import FileLoader
-from .utils import JUPYTER_COLLABORATION_EVENTS_URI, LogLevel, OutOfBandChanges
+from .utils import JUPYTER_COLLABORATION_EVENTS_URI, LogLevel, MessageType, OutOfBandChanges
 
 YFILE = YDOCS["file"]
 
@@ -56,6 +63,8 @@ class DocumentRoom(YRoom):
         # Listen for document changes
         self._document.observe(self._on_document_change)
         self._file.observe(self.room_id, self._on_outofband_change, self._on_filepath_change)
+
+        self.on_message_error = self._handle_sync_message_error
 
     @property
     def file_format(self) -> str:
@@ -113,6 +122,7 @@ class DocumentRoom(YRoom):
         async with self._update_lock:
             # try to apply Y updates from the YStore for this document
             read_from_source = True
+            loaded_from_store = False
             if self.ystore is not None:
                 async with self.ystore.start_lock:
                     if not self.ystore.started.is_set():
@@ -123,9 +133,7 @@ class DocumentRoom(YRoom):
                     self._emit(
                         LogLevel.INFO,
                         "load",
-                        "Content loaded from the store {}".format(
-                            self.ystore.__class__.__qualname__
-                        ),
+                        f"Content loaded from the store {self.ystore.__class__.__qualname__}",
                     )
                     self.log.info(
                         "Content in room %s loaded from the ystore %s",
@@ -133,13 +141,15 @@ class DocumentRoom(YRoom):
                         self.ystore.__class__.__name__,
                     )
                     read_from_source = False
+                    loaded_from_store = True
                 except YDocNotFound:
-                    # YDoc not found in the YStore, create the document from the source file (no change history)
+                    # YDoc not found in the YStore, create the document from
+                    # the source file (no change history)
                     pass
 
             if not read_from_source:
                 # if YStore updates and source file are out-of-sync, resync updates with source
-                if self._document.source != model["content"]:
+                if await self._document.aget() != model["content"]:
                     # TODO: Delete document from the store.
                     self._emit(
                         LogLevel.INFO,
@@ -160,7 +170,10 @@ class DocumentRoom(YRoom):
                     self._room_id,
                     self._file.path,
                 )
-                self._document.source = model["content"]
+                if not loaded_from_store:
+                    await self._apply_deterministic_source_content(model["content"])
+                else:
+                    await self._document.aset(model["content"])
 
                 if self.ystore:
                     await self.ystore.encode_state_as_update(self.ydoc)
@@ -168,6 +181,21 @@ class DocumentRoom(YRoom):
             self._document.dirty = False
             self.ready = True
             self._emit(LogLevel.INFO, "initialize", "Room initialized")
+
+    async def _apply_deterministic_source_content(self, content: Any) -> None:
+        """Load source content using a deterministic update.
+
+        Rooms rebuilt from disk must recreate the same Yjs history for identical
+        content, otherwise reconnecting clients can merge duplicate content from a
+        divergent history after server restart or room eviction.
+
+        The client ID needs to be fixed to a deterministic value, see:
+        https://discuss.yjs.dev/t/initial-offline-value-of-a-shared-document/465
+        """
+        source_ydoc: Doc = Doc(client_id=0)
+        source_document = YDOCS.get(self._file_type, YFILE)(source_ydoc)
+        await source_document.aset(content)
+        self.ydoc.apply_update(source_ydoc.get_update())
 
     def _emit(self, level: LogLevel, action: str | None = None, msg: str | None = None) -> None:
         data = {"level": level.value, "room": self._room_id, "path": self._file.path}
@@ -207,6 +235,32 @@ class DocumentRoom(YRoom):
         except asyncio.CancelledError:
             pass
 
+    async def _handle_sync_message_error(
+        self, exc: Exception, message: bytes, channel: Channel
+    ) -> bool:
+        """Handle errors raised by handle_sync_message.
+
+        Intercepts InvalidParent conflicts caused by a stale client reconnecting
+        after the room was evicted and rebuilt from a modified file. Sends a RAW
+        conflict notification so the client can offer a resolution dialog, and
+        returns True so the serve loop continues for the remaining clients.
+        """
+        if not message or message[0] != MessageType.SYNC:
+            return False
+        if not (isinstance(exc, RuntimeError) and "block parent" in str(exc)):
+            return False
+        self.log.warning(
+            "Conflict in room %s from %s: %s",
+            self._room_id,
+            channel.path,
+            exc,
+        )
+        encoder = Encoder()
+        encoder.write_var_uint(MessageType.RAW)
+        encoder.write_var_string(json.dumps({"type": "conflict"}))
+        await channel.send(encoder.to_bytes())
+        return True
+
     async def _on_outofband_change(self) -> None:
         """
         Called when the file got out-of-band changes.
@@ -223,7 +277,8 @@ class DocumentRoom(YRoom):
             return
 
         async with self._update_lock:
-            self._document.source = model["content"]
+            if await self._document.aget() != model["content"]:
+                await self._document.aset(model["content"])
             self._document.dirty = False
 
     def _on_filepath_change(self) -> None:
@@ -278,20 +333,28 @@ class DocumentRoom(YRoom):
             return
 
         self._saving_document = asyncio.create_task(
-            self._maybe_save_document(self._saving_document)
+            self._maybe_save_document(self._saving_document, save_now=True)
         )
         return self._saving_document
 
-    async def _maybe_save_document(self, saving_document: asyncio.Task | None) -> None:
+    async def _maybe_save_document(
+        self, saving_document: asyncio.Task | None, save_now: bool = False
+    ) -> None:
         """
         Saves the content of the document to disk.
 
         ### Note:
             There is a save delay to debounce the save since we could receive a high
             amount of changes in a short period of time. This way we can cancel the
-            previous save.
+            previous save. When save_now is True, the delay is skipped and the save
+            executes immediately.
+
+            Parameters:
+                saving_document: The previous saving task to cancel if needed.
+                save_now: If True, skip the debounce delay, and save immediately.
+                          This is used when manually saving.
         """
-        if self._save_delay is None:
+        if self._save_delay is None and not save_now:
             return
         if saving_document is not None and not saving_document.done():
             # the document is being saved, cancel that
@@ -301,15 +364,17 @@ class DocumentRoom(YRoom):
         # because this coroutine is run in a cancellable task and cancellation is handled here
 
         try:
-            # save after X seconds of inactivity
-            await asyncio.sleep(self._save_delay)
+            # When save_now is False, wait X seconds of inactivity before saving (auto-save).
+            # When save_now is True, save immediately without debounce delay (manual save).
+            if not save_now and self._save_delay is not None:
+                await asyncio.sleep(self._save_delay)
 
             self.log.info("Saving the content from room %s", self._room_id)
             saved_model = await self._file.maybe_save_content(
                 {
                     "format": self._file_format,
                     "type": self._file_type,
-                    "content": self._document.source,
+                    "content": await self._document.aget(),
                 }
             )
             if saved_model:
@@ -333,7 +398,8 @@ class DocumentRoom(YRoom):
                 return None
 
             async with self._update_lock:
-                self._document.source = model["content"]
+                if await self._document.aget() != model["content"]:
+                    await self._document.aset(model["content"])
                 self._document.dirty = False
 
             self._emit(LogLevel.INFO, "overwrite", "Out-of-band changes while saving.")

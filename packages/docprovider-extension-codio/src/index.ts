@@ -2,7 +2,7 @@
 // Distributed under the terms of the Modified BSD License.
 /**
  * @packageDocumentation
- * @module collaboration-extension
+ * @module jupyter-collaboration-extension-codio
  */
 
 import { JupyterFrontEndPlugin } from '@jupyterlab/application';
@@ -16,6 +16,10 @@ import {
 } from './filebrowser';
 import { notebookCellExecutor } from './executor';
 import { forkManagerPlugin } from './forkManager';
+import {
+  documentProviderFactoryPlugin,
+  awarenessProviderFactoryPlugin
+} from './yprovider';
 
 /**
  * Export the plugins as default.
@@ -27,7 +31,9 @@ const plugins: JupyterFrontEndPlugin<unknown>[] = [
   logger,
   notebookCellExecutor,
   statusBarTimeline,
-  forkManagerPlugin
+  forkManagerPlugin,
+  documentProviderFactoryPlugin,
+  awarenessProviderFactoryPlugin
 ];
 
 export default plugins;

@@ -7,10 +7,11 @@ import json
 from asyncio import Event, sleep
 from typing import Any
 
+import pytest
 from dirty_equals import IsStr
 from jupyter_events.logger import EventLogger
 from jupyter_ydoc import YUnicode
-from pycrdt import Text, Provider
+from pycrdt import Provider, Text
 from pycrdt.websocket.websocket import HttpxWebsocket
 
 
@@ -118,8 +119,8 @@ async def test_room_handler_doc_client_should_emit_awareness_event(
     websocket, room_name = await rtc_connect_doc_client("text", "file", path)
     async with websocket as ws, Provider(doc.ydoc, HttpxWebsocket(ws, room_name)):
         await event.wait()
-        await sleep(0.1)
 
+    await sleep(0.1)
     fim = jp_serverapp.web_app.settings["file_id_manager"]
 
     assert doc.source == content
@@ -131,6 +132,71 @@ async def test_room_handler_doc_client_should_emit_awareness_event(
     assert collected_data[1]["action"] == "leave"
     assert collected_data[1]["roomid"] == "text:file:" + fim.get_id("test.txt")
     assert collected_data[1]["username"] is not None
+
+
+@pytest.fixture
+def rtc_document_cleanup_delay():
+    return 2
+
+
+async def test_room_handler_doc_client_should_stop_file_watcher(
+    rtc_create_file, rtc_connect_doc_client, jp_serverapp
+):
+    path, _ = await rtc_create_file("test.txt", "test")
+    fim = jp_serverapp.web_app.settings["file_id_manager"]
+    file_loaders = jp_serverapp.web_app.settings["jupyter_server_ydoc"].file_loaders
+
+    event = Event()
+
+    def _on_document_change(target: str, e: Any) -> None:
+        if target == "source":
+            event.set()
+
+    doc = YUnicode()
+    doc.observe(_on_document_change)
+
+    websocket, room_name = await rtc_connect_doc_client("text", "file", path)
+    async with websocket as ws, Provider(doc.ydoc, HttpxWebsocket(ws, room_name)):
+        await event.wait()
+        file_id = fim.get_id("test.txt")
+        assert file_id in file_loaders
+        file_loader = file_loaders[file_id]
+        await sleep(0.1)
+
+    listener_was_called = False
+    collected_data = []
+
+    async def my_listener(logger: EventLogger, schema_id: str, data: dict) -> None:
+        nonlocal listener_was_called
+        collected_data.append(data)
+        listener_was_called = True
+
+    event_logger = jp_serverapp.event_logger
+    event_logger.add_listener(
+        schema_id="https://schema.jupyter.org/jupyter_collaboration/session/v1",
+        listener=my_listener,
+    )
+
+    file_watcher = file_loader._watcher
+
+    # Before cleanup delay, the file watcher should still be running
+    assert not file_watcher.done()
+
+    # Wait for the cleanup delay (2 seconds) plus a buffer (0.5 seconds)
+    await sleep(2.5)
+
+    assert listener_was_called is True
+    assert len(collected_data) == 2
+    assert collected_data[0]["msg"] == "Room deleted."
+    assert collected_data[0]["path"] == "test.txt"
+    assert collected_data[1]["msg"] == "Loader deleted."
+    assert collected_data[1]["path"] == "test.txt"
+
+    # After the cleanup delay, the file watcher should be done
+    assert file_watcher.done()
+
+    await jp_serverapp.web_app.settings["jupyter_server_ydoc"].stop_extension()
+    del jp_serverapp.web_app.settings["file_id_manager"]
 
 
 async def test_room_handler_doc_client_should_cleanup_room_file(
@@ -192,7 +258,18 @@ async def test_room_handler_doc_client_should_cleanup_room_file(
     assert listener_was_called is True
     assert len(collected_data) == 4
     # no two collaboration events are emitted.
-    # [{'level': 'WARNING', 'msg': 'There is another collaborative session accessing the same file.\nThe synchronization bet...ou might lose some of your changes.', 'path': 'test2.txt', 'room': 'text2:file2:51b7e24f-f534-47fb-882f-5cc45ba867fe'}]
+    # [
+    #     {
+    #         "level": "WARNING",
+    #         "msg": (
+    #             "There is another collaborative session accessing the same file.\n"
+    #             "The synchronization between sessions may fail and you might lose "
+    #             "some of your changes."
+    #         ),
+    #         "path": "test2.txt",
+    #         "room": "text2:file2:51b7e24f-f534-47fb-882f-5cc45ba867fe",
+    #     }
+    # ]
     assert collected_data[0]["path"] == "test2.txt"
     assert collected_data[0]["room"] == "text2:file2:" + fim.get_id("test2.txt")
     assert collected_data[0]["action"] == "clean"
@@ -315,8 +392,9 @@ async def test_fork_handler(
         fork_ydoc.observe(_on_fork_change)
         fork_text = fork_ydoc.ydoc.get("source", type=Text)
 
-        async with await rtc_connect_fork_client(fork_roomid1) as ws, Provider(
-            fork_ydoc.ydoc, HttpxWebsocket(ws, fork_roomid1)
+        async with (
+            await rtc_connect_fork_client(fork_roomid1) as ws,
+            Provider(fork_ydoc.ydoc, HttpxWebsocket(ws, fork_roomid1)),
         ):
             await fork_connect_event.wait()
             root_text = root_ydoc.ydoc.get("source", type=Text)
