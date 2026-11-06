@@ -53,11 +53,11 @@ export const TimelineSliderComponent: React.FC<Props> = ({
   const sessionRef = useRef<any>(null);
 
   useEffect(() => {
-    const f = async() => {
+    const f = async () => {
       if (!docIsReadonly) {
         return;
       }
-      const notebookPath = extractFilenameFromURL(apiURL)
+      const notebookPath = extractFilenameFromURL(apiURL);
       const response = await requestDocumentTimeline(
         format,
         contentType,
@@ -75,13 +75,13 @@ export const TimelineSliderComponent: React.FC<Props> = ({
       }
 
       const text = await response.text();
-      let data = {forkRoom: '', sessionId: ''};
+      let data = { forkRoom: '', sessionId: '' };
       data = JSON.parse(text);
       // make document read-only
       provider.connectToForkDoc(data.forkRoom, data.sessionId);
-    }
+    };
     f();
-  }, [])
+  }, []);
 
   async function fetchTimeline(notebookPath: string) {
     try {
@@ -174,7 +174,7 @@ export const TimelineSliderComponent: React.FC<Props> = ({
     } else {
       Notification.error(response.status, { autoClose: 4000 });
     }
-  }
+  };
 
   const handleRestore = async () => {
     if (!sessionRef.current) {
