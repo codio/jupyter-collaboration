@@ -141,7 +141,9 @@ export const rtcPanelPlugin: JupyterFrontEndPlugin<void> = {
   ): void => {
     const { user } = app.serviceManager;
 
-    const trans = (translator ?? nullTranslator).load('jupyter_collaboration_codio');
+    const trans = (translator ?? nullTranslator).load(
+      'jupyter_collaboration_codio'
+    );
 
     const userPanel = new SidePanel({
       alignment: 'justify'

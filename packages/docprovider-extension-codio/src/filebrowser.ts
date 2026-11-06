@@ -53,7 +53,7 @@ const TWO_SESSIONS_WARNING =
   'This is not supported. Please close this view; otherwise, ' +
   'some of your edits may not be saved properly.';
 
-  // TODO: check activate!!!
+// TODO: check activate!!!
 export const rtcContentProvider: JupyterFrontEndPlugin<ICollaborativeContentProvider> =
   {
     id: 'docprovider-extension-codio:content-provider',
@@ -176,7 +176,7 @@ export const ynotebook: JupyterFrontEndPlugin<void> = {
 /**
  * A plugin to add a timeline slider status item to the status bar.
  */
-// 
+//
 export const statusBarTimeline: JupyterFrontEndPlugin<void> = {
   id: 'docprovider-extension-codio:statusBarTimeline',
   description: 'Plugin to add a timeline slider to the status bar',
@@ -189,7 +189,9 @@ export const statusBarTimeline: JupyterFrontEndPlugin<void> = {
     docManager: IDocumentManager
   ): Promise<void> => {
     try {
-      await loadCodioClient("https://codio.com/ext/iframe/base/static/codio-client.js");
+      await loadCodioClient(
+        'https://codio.com/ext/iframe/base/static/codio-client.js'
+      );
       const codioProjectState: any = await getCodioProjectState();
       let sliderItem: Widget | null = null;
       let timelineWidget: TimelineWidget | null = null;
@@ -310,7 +312,9 @@ export const logger: JupyterFrontEndPlugin<void> = {
     nbTracker: INotebookTracker | null,
     translator: ITranslator | null
   ): void => {
-    const trans = (translator ?? nullTranslator).load('jupyter_collaboration_codio');
+    const trans = (translator ?? nullTranslator).load(
+      'jupyter_collaboration_codio'
+    );
     const schemaID =
       'https://schema.jupyter.org/jupyter_collaboration/session/v1';
 
