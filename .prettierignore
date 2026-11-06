@@ -12,4 +12,5 @@ docs
 tests
 jupyter-config
 jupyter_collaboration
+jupyter_collaboration_codio
 .mypy_cache

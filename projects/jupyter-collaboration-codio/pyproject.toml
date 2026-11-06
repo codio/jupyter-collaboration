@@ -30,9 +30,9 @@ classifiers = [
 ]
 dynamic = ["version"]
 dependencies = [
-    "jupyter_collaboration_ui_codio>=2.1.1,<3",
-    "jupyter_docprovider_codio>=2.1.1,<3",
-    "jupyter_server_ydoc_codio>=2.1.1,<3",
+    "jupyter_collaboration_ui_codio>=2.1.4rc0,<3",
+    "jupyter_docprovider_codio>=2.1.4rc0,<3",
+    "jupyter_server_ydoc_codio>=2.1.4rc0,<3",
     "jupyterlab>=4.4.0,<5.0.0",
 ]
 
@@ -40,11 +40,11 @@ dependencies = [
 Documentation = "https://jupyterlab-realtime-collaboration.readthedocs.io/"
 Repository = "https://github.com/codio/jupyter-collaboration"
 Changelog = "https://jupyterlab-realtime-collaboration.readthedocs.io/en/latest/changelog.html"
-Source = "https://github.com/codio/jupyter-collaboration/tree/main/projects/jupyter-collaboration"
+Source = "https://github.com/codio/jupyter-collaboration/tree/main/projects/jupyter-collaboration-codio"
 Issues = "https://github.com/codio/jupyter-collaboration/issues/new/choose"
 
 [tool.hatch.version]
-path = "jupyter_collaboration/_version.py"
+path = "jupyter_collaboration_codio/_version.py"
 
 [tool.check-wheel-contents]
 ignore = ["W002"]

@@ -1,7 +1,7 @@
 {
-  "name": "@jupyter/collaborative-drive",
-  "version": "4.1.1",
-  "description": "Codio fork of JupyterLab - Collaborative Drive",
+  "name": "jupyter-collaborative-drive-codio",
+  "version": "4.1.4-rc.0",
+  "description": "Codio fork of JupyterLab @jupyter/collaborative-drive - Collaborative Drive",
   "homepage": "https://github.com/codio/jupyter-collaboration",
   "bugs": {
     "url": "https://github.com/codio/jupyter-collaboration/issues"
@@ -46,10 +46,12 @@
     "rimraf": "^4.1.2",
     "typescript": "~5.1.6"
   },
-  "private": true,
+  "publishConfig": {
+    "access": "public"
+  },
   "typedoc": {
     "entryPoint": "./src/index.ts",
-    "displayName": "@jupyter/collaborative-drive",
+    "displayName": "jupyter-collaborative-drive-codio",
     "tsconfig": "./tsconfig.json"
   }
 }

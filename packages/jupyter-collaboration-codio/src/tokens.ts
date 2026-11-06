@@ -12,7 +12,7 @@ import type { User } from '@jupyterlab/services';
  * (top-right menu in JupyterLab's interface).
  */
 export const IUserMenu = new Token<IUserMenu>(
-  '@jupyter/collaboration:IUserMenu'
+  'jupyter-collaboration-codio:IUserMenu'
 );
 
 /**

@@ -23,13 +23,18 @@ def increment_version(current, spec):
         spec = f"{curr.major}.{curr.minor + 1}.0.a0"
 
     elif spec == "release":
-        p, x = curr.pre
+        if curr.pre:
+            p, x = curr.pre
+        else:
+            p = ""
         if p == "a":
             p = "b"
         elif p == "b":
             p = "rc"
         elif p == "rc":
             p = None
+        elif p == "":
+            p = "a"
         suffix = f"{p}0" if p else ""
         spec = f"{curr.major}.{curr.minor}.{curr.micro}{suffix}"
 
