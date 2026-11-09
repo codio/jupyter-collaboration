@@ -5,7 +5,7 @@
 
 declare global {
   interface Window {
-    codio: any;
+      codio: any;
   }
 }
 
@@ -48,67 +48,63 @@ export const loadCodioClient = async (codioClientUrl?: string) => {
   // do not double load
   if (window.codio) {
     codioClientLoadDeferred.resolve();
-    return;
+    return
   }
   if (!codioClientUrl) {
     codioClientUrl = 'https://codio.com/ext/iframe/base/static/codio-client.js';
   }
   loadJS(codioClientUrl, onLoadCodioClient, document.body);
-  await codioClientLoadDeferred.promise;
-};
+  await codioClientLoadDeferred.promise
+}
 
 export const sendErrorEvent = async function (message: string, context: any) {
   try {
-    console.log(
-      '[docprovider-extension] codio sendErrorEvent',
-      message,
-      context
-    );
-    await window.codio?.loaded();
+    console.log('[docprovider-extension] codio sendErrorEvent', message, context)
+    await window.codio?.loaded()
     window.codio?.event('error', {
       message: message,
       context: context
-    });
+    })
   } catch (e) {
-    console.log('[docprovider-extension] sendErrorEvent', e);
+    console.log('[docprovider-extension] sendErrorEvent', e)
   }
-};
+}
 
 export const getCodioProjectState = async () => {
   if (!window.codio) {
-    return false;
+    return false
   }
 
   const p = new Promise((resolve, reject) => {
     if (!window.codio) {
-      resolve({});
+      resolve({})
     }
     window.codio?.subscribe('projectState', async (data: any) => {
-      resolve(data);
-    });
+      resolve(data)
+    })
     setTimeout(() => {
-      resolve({});
-    }, 10 * 1000);
-  });
+      resolve({})
+    }, 10 * 1000)
+  })
 
   const codioLoaded = () => {
     return new Promise((resolve, reject) => {
       if (!window.codio) {
-        resolve(null);
+        resolve(null)
       }
       window.codio?.loaded().then(() => {
-        console.log('[docprovider-extension] codio loaded');
-        resolve(null);
-      });
+        console.log('[docprovider-extension] codio loaded')
+        resolve(null)
+      })
       setTimeout(() => {
-        console.log('[docprovider-extension] codio load timeout');
-        resolve(null);
-      }, 10 * 1000);
-    });
-  };
+        console.log('[docprovider-extension] codio load timeout')
+        resolve(null)
+      }, 10 * 1000)
+    })
+  }
 
-  window.codio?.setLoaded();
-  await codioLoaded();
+  window.codio?.setLoaded()
+  await codioLoaded()
 
-  return p;
-};
+  return p
+}

@@ -91,7 +91,7 @@ export const rtcGlobalAwarenessPlugin: JupyterFrontEndPlugin<IAwareness> = {
   provides: IGlobalAwareness,
   activate: (
     app: JupyterFrontEnd,
-    state: StateDB,
+    state: IStateDB,
     factory: IAwarenessProviderFactory
   ): IAwareness => {
     const { user } = app.serviceManager;
@@ -108,7 +108,7 @@ export const rtcGlobalAwarenessPlugin: JupyterFrontEndPlugin<IAwareness> = {
 
     factory.create(awarenessOptions);
 
-    state.changed.connect(async () => {
+    (state as StateDB).changed.connect(async () => {
       const data: any = await state.toJSON();
       const current: string = data['layout-restorer:data']?.main?.current || '';
 
@@ -141,9 +141,7 @@ export const rtcPanelPlugin: JupyterFrontEndPlugin<void> = {
   ): void => {
     const { user } = app.serviceManager;
 
-    const trans = (translator ?? nullTranslator).load(
-      'jupyter_collaboration_codio'
-    );
+    const trans = (translator ?? nullTranslator).load('jupyter_collaboration_codio');
 
     const userPanel = new SidePanel({
       alignment: 'justify'

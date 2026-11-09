@@ -109,9 +109,7 @@ interface IShareData {
 export async function showSharedLinkDialog({
   translator
 }: ISharedLinkDialogOptions): Promise<Dialog.IResult<string>> {
-  const trans = (translator ?? nullTranslator).load(
-    'jupyter_collaboration_codio'
-  );
+  const trans = (translator ?? nullTranslator).load('jupyter_collaboration_codio');
 
   const token = PageConfig.getToken();
   const url = new URL(

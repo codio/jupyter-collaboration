@@ -31,9 +31,7 @@ export const sharedLink: JupyterFrontEndPlugin<void> = {
     translator: ITranslator | null
   ) => {
     const { commands } = app;
-    const trans = (translator ?? nullTranslator).load(
-      'jupyter_collaboration_codio'
-    );
+    const trans = (translator ?? nullTranslator).load('jupyter_collaboration_codio');
 
     commands.addCommand(CommandIDs.share, {
       label: trans.__('Generate a Shared Link'),

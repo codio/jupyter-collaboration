@@ -318,6 +318,7 @@ def rtc_create_mock_document_room():
                 store,
                 None,
                 save_delay,
+                document_load_progressively=False,
             ),
         )
 
